@@ -1,0 +1,25 @@
+name: Merge dev/front to dev/main
+on:
+  push:
+    branches:
+      - 'dev/front'
+jobs:
+  merge-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Merge dev/front -> dev/main
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          target_branch: dev/main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge dev/main -> dev/back
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: dev/main
+          target_branch: dev/back
+          github_token: ${{ secrets.GITHUB_TOKEN }}
