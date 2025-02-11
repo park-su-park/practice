@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinPluginSerialization)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
@@ -36,6 +37,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -46,6 +49,12 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+
+            api(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.compose.viewmodel.navigation)
+
+            implementation(libs.jetbrains.navigation.compose)
+            implementation(libs.kotlinx.serialization.json)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
