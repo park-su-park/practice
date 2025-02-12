@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import park_su_park.backend.request_dto.RequestUserDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<ToDo> toDoes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
     private String username;
@@ -34,4 +35,12 @@ public class User {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime create_time;
+
+    public static User createUser(RequestUserDto requestUserDto) {
+        User user = new User();
+        user.setUsername(requestUserDto.getUsername());
+        user.setPassword(requestUserDto.getPassword());
+        user.setEmail(requestUserDto.getEmail());
+        return user;
+    }
 }
