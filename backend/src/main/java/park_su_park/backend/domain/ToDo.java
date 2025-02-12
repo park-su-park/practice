@@ -19,14 +19,14 @@ public class ToDo {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "todo")
+    @OneToMany(mappedBy = "toDo")
     private List<Comment> comments = new ArrayList<>();
 
     private String title;
 
     private String content;
 
-    private LocalDateTime localDateTime;
+    private LocalDateTime createdTime;
 
-    private LocalDateTime updateDateTime;
+    private LocalDateTime updateTime;
 }
