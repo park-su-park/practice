@@ -4,6 +4,8 @@ package park_su_park.backend.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id @GeneratedValue
     @Column(name = "user_id")
@@ -28,5 +31,7 @@ public class User {
 
     private String email;
 
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime create_time;
 }
