@@ -18,22 +18,18 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/search")
-    public ResponseEntity<UserDataResponse> searchUserByUsername(
-            @RequestParam(required = false) String username,
-            @RequestParam(required = false) String email) {
+    public ResponseEntity<UserDataResponse> searchUser(
+            @RequestParam String q,
+            @RequestParam String udm) {
 
-        if (username != null && email != null) {
-            throw new IllegalArgumentException("둘 중 하나만 입력해야 합니다. username 또는 email 을 선택해주세요.");
-        }
-
-        if (username != null) {
-            User user = userService.findUserByUsername(username);
+        if(udm.equals("username")){
+            User user = userService.findUserByUsername(q);
             return ResponseEntity.ok(UserDataResponse.createUserDataResponse(user));
-        } else if (email != null) {
-            User user = userService.findUserByEmail(email);
+        } else if (udm.equals("email")) {
+            User user = userService.findUserByEmail(q);
             return ResponseEntity.ok(UserDataResponse.createUserDataResponse(user));
         } else {
-            throw new IllegalArgumentException("username 또는 email 을 선택해서 검색 해주세요.");
+            throw new IllegalArgumentException("유효한 검색 타입을 지정해서 검색해주세요.");
         }
     }
 }
