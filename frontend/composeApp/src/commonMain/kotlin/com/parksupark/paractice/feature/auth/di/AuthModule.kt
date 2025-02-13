@@ -1,9 +1,7 @@
 package com.parksupark.paractice.feature.auth.di
 
-import com.parksupark.paractice.feature.auth.presentation.login.LoginViewModel
-import org.koin.core.module.dsl.viewModelOf
-import org.koin.dsl.module
+import com.parksupark.paractice.feature.auth.presentation.di.sharedAuthPresentationModule
 
-val authModule = module {
-    viewModelOf(::LoginViewModel)
-}
+val authModules = listOf(
+    sharedAuthPresentationModule,
+)
