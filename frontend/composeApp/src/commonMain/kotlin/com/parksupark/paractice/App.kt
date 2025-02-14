@@ -8,7 +8,6 @@ import com.parksupark.paractice.feature.auth.navigation.AuthRoute
 import com.parksupark.paractice.feature.auth.navigation.authGraph
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
-import org.koin.core.context.KoinContext
 
 @Composable
 fun App() {

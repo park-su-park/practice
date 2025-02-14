@@ -6,23 +6,37 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun LoginRoute(coordinator: LoginCoordinator = rememberLoginCoordinator()) {
+fun LoginRoute(
+    navigateToSignup: () -> Unit,
+    navigateToForgotPassword: () -> Unit,
+    coordinator: LoginCoordinator = rememberLoginCoordinator(),
+) {
     // State observing and declarations
     val uiState by coordinator.uiStateFlow.collectAsStateWithLifecycle(LoginState())
 
     // UI Actions
-    val actions = rememberLoginActions(coordinator)
+    val actions = rememberLoginActions(
+        navigateToSignup = navigateToSignup,
+        navigateToForgotPassword = navigateToForgotPassword,
+        coordinator = coordinator,
+    )
 
     // UI Rendering
     LoginScreen(state = uiState, actions = actions)
 }
 
 @Composable
-fun rememberLoginActions(coordinator: LoginCoordinator): LoginActions {
-    return remember(coordinator) {
+fun rememberLoginActions(
+    navigateToSignup: () -> Unit,
+    navigateToForgotPassword: () -> Unit,
+    coordinator: LoginCoordinator,
+): LoginActions {
+    return remember(navigateToSignup, navigateToForgotPassword, coordinator) {
         LoginActions(
             onClickLogin = { coordinator.viewModel.performLogin() },
+            onClickSignUp = navigateToSignup,
             onClickSkip = { coordinator.viewModel.skipLogin() },
+            onClickForgotPassword = navigateToForgotPassword,
         )
     }
 }

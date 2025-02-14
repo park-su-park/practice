@@ -20,7 +20,10 @@ fun NavGraphBuilder.authGraph() {
         startDestination = AuthRoute.Login,
     ) {
         composable<AuthRoute.Login> {
-            LoginRoute()
+            LoginRoute(
+                navigateToSignup = { /* TODO */ },
+                navigateToForgotPassword = { /* TODO */ },
+            )
         }
     }
 }
