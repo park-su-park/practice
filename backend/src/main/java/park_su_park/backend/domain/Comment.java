@@ -19,6 +19,6 @@ public class Comment {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
+    @JoinColumn(name = "to_do_id")
     private ToDo toDo;
 }

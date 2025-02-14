@@ -21,7 +21,7 @@ public class ToDoRepository {
     }
 
     public List<ToDo> findAll() {
-        return em.createQuery("select t from ToDo t",ToDo.class).getResultList()
+        return em.createQuery("select t from ToDo t",ToDo.class).getResultList();
     }
 
     public void remove(ToDo toDo) {

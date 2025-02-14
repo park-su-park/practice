@@ -3,7 +3,11 @@ package park_su_park.backend.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import park_su_park.backend.dto.CreateUserRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,6 +15,8 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor
 public class User {
     @Id @GeneratedValue
     @Column(name = "user_id")
@@ -19,7 +25,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<ToDo> toDoes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
     private String username;
@@ -28,5 +34,19 @@ public class User {
 
     private String email;
 
-    private LocalDateTime create_time;
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdTime;
+
+    //==생성자==//
+    private User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
+    //==생성 메서드==//
+    public static User createUser(CreateUserRequest createUserRequest) {
+        return new User(createUserRequest.getUsername(), createUserRequest.getRawPassword(), createUserRequest.getEmail());
+    }
 }
