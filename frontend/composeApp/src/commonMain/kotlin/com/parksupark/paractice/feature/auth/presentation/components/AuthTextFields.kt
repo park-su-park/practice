@@ -1,4 +1,4 @@
-package com.parksupark.paractice.feature.auth.presentation.login.components
+package com.parksupark.paractice.feature.auth.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,7 +44,7 @@ fun EmailTextField(
     onKeyboardAction: KeyboardActionHandler,
     modifier: Modifier = Modifier,
 ) {
-    LoginTextField(
+    AuthTextField(
         state = state,
         startIcon = Icons.Outlined.Email,
         hint = "Email",
@@ -63,7 +63,7 @@ fun PasswordTextField(
     onKeyboardAction: KeyboardActionHandler,
     modifier: Modifier = Modifier,
 ) {
-    LoginTextField(
+    AuthTextField(
         state = state,
         startIcon = Icons.Outlined.Key,
         hint = "Password",
@@ -78,7 +78,7 @@ fun PasswordTextField(
 }
 
 @Composable
-private fun LoginTextField(
+private fun AuthTextField(
     state: TextFieldState,
     startIcon: ImageVector,
     hint: String,
@@ -157,7 +157,7 @@ private fun LoginTextField(
 
 @Composable
 @Preview
-private fun LoginTextFieldPreview() {
+private fun AuthTextFieldPreview() {
     PTheme {
         Column {
             EmailTextField(

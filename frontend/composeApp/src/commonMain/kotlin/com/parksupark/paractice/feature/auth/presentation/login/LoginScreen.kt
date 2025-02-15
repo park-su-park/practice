@@ -3,6 +3,7 @@ package com.parksupark.paractice.feature.auth.presentation.login
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -16,11 +17,11 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import com.parksupark.paractice.core.designsystem.PTheme
 import com.parksupark.paractice.core.designsystem.components.VerticalSpacer
-import com.parksupark.paractice.feature.auth.presentation.login.components.EmailTextField
-import com.parksupark.paractice.feature.auth.presentation.login.components.ForgotPasswordButton
-import com.parksupark.paractice.feature.auth.presentation.login.components.LoginButton
-import com.parksupark.paractice.feature.auth.presentation.login.components.PasswordTextField
-import com.parksupark.paractice.feature.auth.presentation.login.components.SignUpButton
+import com.parksupark.paractice.feature.auth.presentation.components.EmailTextField
+import com.parksupark.paractice.feature.auth.presentation.components.ForgotPasswordButton
+import com.parksupark.paractice.feature.auth.presentation.components.AuthButton
+import com.parksupark.paractice.feature.auth.presentation.components.PasswordTextField
+import com.parksupark.paractice.feature.auth.presentation.components.SignUpButton
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -83,7 +84,7 @@ private fun LoginContent(
         )
         VerticalSpacer(height = 24.dp)
 
-        LoginButton(onClick = actions.onClickLogin)
+        AuthButton(text = "Login", onClick = actions.onClickLogin, modifier = Modifier.fillMaxWidth())
         VerticalSpacer(height = 24.dp)
 
         SignUpButton(

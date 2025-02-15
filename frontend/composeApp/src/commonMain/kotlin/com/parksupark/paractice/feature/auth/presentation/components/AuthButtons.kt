@@ -1,4 +1,4 @@
-package com.parksupark.paractice.feature.auth.presentation.login.components
+package com.parksupark.paractice.feature.auth.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,26 +35,6 @@ fun ForgotPasswordButton(
 }
 
 @Composable
-fun LoginButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        shape = MaterialTheme.shapes.small,
-    ) {
-        Text(
-            text = "Login",
-            modifier = Modifier.padding(vertical = 8.dp),
-            style = MaterialTheme.typography.labelLarge,
-        )
-    }
-}
-
-@Composable
 fun SignUpButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -82,6 +62,26 @@ fun SignUpButton(
 }
 
 @Composable
+fun AuthButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .padding(horizontal = 16.dp),
+        shape = MaterialTheme.shapes.small,
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(vertical = 8.dp),
+            style = MaterialTheme.typography.labelLarge,
+        )
+    }
+}
+
+@Composable
 @Preview
 private fun LoginButtonsPreview() {
     PTheme {
@@ -89,10 +89,11 @@ private fun LoginButtonsPreview() {
             ForgotPasswordButton(
                 onClick = { },
             )
-            LoginButton(
+            SignUpButton(
                 onClick = { },
             )
-            SignUpButton(
+            AuthButton(
+                text = "Login",
                 onClick = { },
             )
         }
