@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import park_su_park.backend.domain.User;
-import park_su_park.backend.dto.UserDataResponse;
+import park_su_park.backend.dto.responseBody.UserDataResponse;
 import park_su_park.backend.service.UserService;
 
 @RestController

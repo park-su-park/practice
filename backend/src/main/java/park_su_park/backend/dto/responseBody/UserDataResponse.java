@@ -1,4 +1,4 @@
-package park_su_park.backend.dto;
+package park_su_park.backend.dto.responseBody;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

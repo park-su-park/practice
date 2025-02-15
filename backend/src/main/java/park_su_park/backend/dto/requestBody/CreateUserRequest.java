@@ -1,4 +1,4 @@
-package park_su_park.backend.dto;
+package park_su_park.backend.dto.requestBody;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
