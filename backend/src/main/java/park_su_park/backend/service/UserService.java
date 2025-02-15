@@ -1,12 +1,14 @@
 package park_su_park.backend.service;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import park_su_park.backend.domain.User;
-import park_su_park.backend.dto.CreateUserRequest;
+import park_su_park.backend.dto.requestBody.CreateUserRequest;
 import park_su_park.backend.exception.DuplicateResourceException;
 import park_su_park.backend.exception.ResourceNotFoundException;
+import park_su_park.backend.exception.UnauthorizedAccessException;
 import park_su_park.backend.repository.UserRepository;
 
 import java.text.MessageFormat;
@@ -16,18 +18,17 @@ import java.text.MessageFormat;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final static String UNAUTHORIZED_ACCESS_ACTION = "로그인 정보가 유효하지 않거나 만료 되었습니다.";
     private final UserRepository userRepository;
 
     public Long join(CreateUserRequest createUserRequest) {
         checkDuplicateUser(createUserRequest);
 
-        User user = User.createUser(createUserRequest);
+        User user = User.create(createUserRequest);
         User savedUser = userRepository.save(user);
         return savedUser.getId();
     }
 
-    // id 로 user 조회
-    // 조회 실패시 404 반환
     public User findUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -35,8 +36,6 @@ public class UserService {
                 ));
     }
 
-    // username 으로 user 조회
-    // 조회 실패시 404 반환
     public User findUserByUsername(String username) {
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -50,9 +49,7 @@ public class UserService {
                         MessageFormat.format("해당 email 을 가진 사용자를 찾지 못했습니다: {0}", email)
                 ));
     }
-    
-    // email 과 username 을 기반으로 중복 검사
-    // 중복검사 실패시 400 반환
+
     @Transactional(readOnly = true)
     public void checkDuplicateUser(CreateUserRequest createUserRequest) {
         userRepository.findUserByUsername(createUserRequest.getUsername())
@@ -68,5 +65,13 @@ public class UserService {
                             MessageFormat.format("다른 사용자가 사용중인 email 입니다: {0}", createUserRequest.getEmail())
                     );
                 });
+    }
+
+    public Long getUserIdFromSession(HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            throw new UnauthorizedAccessException(UNAUTHORIZED_ACCESS_ACTION);
+        }
+        return userId;
     }
 }
