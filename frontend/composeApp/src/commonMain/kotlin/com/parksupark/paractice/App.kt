@@ -18,7 +18,7 @@ fun App() {
                 navController = navHostController,
                 startDestination = AuthRoute.Root,
             ) {
-                authGraph()
+                authGraph(navController = navHostController)
             }
         }
     }

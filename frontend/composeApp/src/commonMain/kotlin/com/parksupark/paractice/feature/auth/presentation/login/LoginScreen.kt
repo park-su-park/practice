@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -14,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.parksupark.paractice.core.designsystem.PTheme
 import com.parksupark.paractice.core.designsystem.components.VerticalSpacer
@@ -50,7 +53,7 @@ private fun LoginContent(
     val passwordState = state.passwordState
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -60,23 +63,28 @@ private fun LoginContent(
         val (first, second) = remember { FocusRequester.createRefs() }
         EmailTextField(
             state = emailState,
-            onKeyboardAction = {
-                second.requestFocus()
-            },
             modifier = Modifier
                 .focusRequester(first)
                 .padding(horizontal = 16.dp),
+            onKeyboardAction = {
+                second.requestFocus()
+            },
         )
         VerticalSpacer(height = 20.dp)
 
         PasswordTextField(
             state = passwordState,
-            onKeyboardAction = {
-                actions.onClickLogin()
-            },
+            hint = "Password",
             modifier = Modifier
                 .focusRequester(second)
                 .padding(horizontal = 16.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+            ),
+            onKeyboardAction = {
+                actions.onClickLogin()
+            },
         )
         ForgotPasswordButton(
             onClick = actions.onClickForgotPassword,

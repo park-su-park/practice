@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Key
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -39,20 +40,35 @@ import com.parksupark.paractice.core.designsystem.PTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
+fun UsernameTextField(
+    state: TextFieldState,
+    modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onKeyboardAction: KeyboardActionHandler? = null,
+) {
+    AuthTextField(
+        state = state,
+        startIcon = Icons.Outlined.Person,
+        hint = "Username",
+        modifier = modifier,
+        keyboardOptions = keyboardOptions,
+        onKeyboardAction = onKeyboardAction,
+    )
+}
+
+@Composable
 fun EmailTextField(
     state: TextFieldState,
-    onKeyboardAction: KeyboardActionHandler,
     modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onKeyboardAction: KeyboardActionHandler? = null,
 ) {
     AuthTextField(
         state = state,
         startIcon = Icons.Outlined.Email,
         hint = "Email",
         modifier = modifier,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next,
-        ),
+        keyboardOptions = keyboardOptions,
         onKeyboardAction = onKeyboardAction,
     )
 }
@@ -60,19 +76,18 @@ fun EmailTextField(
 @Composable
 fun PasswordTextField(
     state: TextFieldState,
-    onKeyboardAction: KeyboardActionHandler,
+    hint: String,
     modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onKeyboardAction: KeyboardActionHandler? = null,
 ) {
     AuthTextField(
         state = state,
         startIcon = Icons.Outlined.Key,
-        hint = "Password",
+        hint = hint,
         modifier = modifier,
         isPassword = true,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done,
-        ),
+        keyboardOptions = keyboardOptions,
         onKeyboardAction = onKeyboardAction,
     )
 }
@@ -162,10 +177,16 @@ private fun AuthTextFieldPreview() {
         Column {
             EmailTextField(
                 state = TextFieldState(),
+                keyboardOptions = KeyboardOptions.Default,
                 onKeyboardAction = { },
             )
             PasswordTextField(
                 state = TextFieldState(),
+                hint = "Password",
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done,
+                ),
                 onKeyboardAction = { },
             )
         }
