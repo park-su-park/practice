@@ -21,6 +21,7 @@ fun NavGraphBuilder.authGraph() {
     ) {
         composable<AuthRoute.Login> {
             LoginRoute(
+                navigateToHome = { /* TODO */ },
                 navigateToSignup = { /* TODO */ },
                 navigateToForgotPassword = { /* TODO */ },
             )

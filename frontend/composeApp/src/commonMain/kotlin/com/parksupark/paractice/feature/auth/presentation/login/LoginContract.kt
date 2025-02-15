@@ -8,7 +8,15 @@ import androidx.compose.foundation.text.input.TextFieldState
 data class LoginState(
     val emailState: TextFieldState = TextFieldState(),
     val passwordState: TextFieldState = TextFieldState(),
+    val isLoggingIn: Boolean = false,
 )
+
+/**
+ * Login Events emitted from the ViewModel
+ **/
+sealed interface LoginEvent {
+    data object LoginSuccess : LoginEvent
+}
 
 /**
  * Login Actions emitted from the UI Layer

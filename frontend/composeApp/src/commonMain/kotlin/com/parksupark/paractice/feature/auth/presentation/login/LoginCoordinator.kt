@@ -12,6 +12,7 @@ class LoginCoordinator(
     val viewModel: LoginViewModel,
 ) {
     val uiStateFlow = viewModel.uiStateFlow
+    val event = viewModel.event
 }
 
 @Composable
