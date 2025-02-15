@@ -1,6 +1,14 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+
+buildscript {
+    dependencies {
+        classpath(libs.buildkonfig.gradle.plugin)
+    }
+}
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +16,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.buildKonfig)
 }
 
 kotlin {
@@ -113,5 +122,18 @@ compose.desktop {
             packageName = "com.parksupark.paractice"
             packageVersion = "1.0.0"
         }
+    }
+}
+
+buildkonfig {
+    packageName = "com.parksupark.paractice"
+
+    val properties = Properties().apply {
+        val localPropertiesFile = project.rootProject.file("project.properties")
+        load(localPropertiesFile.inputStream())
+    }
+
+    defaultConfigs {
+        buildConfigField(FieldSpec.Type.STRING, "BACKEND_URL", "\"${properties.getProperty("backend.url")}\"")
     }
 }
