@@ -69,7 +69,7 @@ kotlin {
             implementation(libs.jetbrains.navigation.compose)
             implementation(libs.kotlinx.serialization.json)
 
-            implementation(libs.ktor.client.core)
+            implementation(libs.bundles.ktor)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
