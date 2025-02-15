@@ -136,6 +136,6 @@ buildkonfig {
     }
 
     defaultConfigs {
-        buildConfigField(FieldSpec.Type.STRING, "BACKEND_URL", "\"${properties.getProperty("backend.url")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "BACKEND_URL", properties.getProperty("backend.url"))
     }
 }
