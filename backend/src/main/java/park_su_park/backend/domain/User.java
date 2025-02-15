@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import park_su_park.backend.dto.CreateUserRequest;
+import park_su_park.backend.dto.requestBody.CreateUserRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class User {
     private Long id;
 
     @OneToMany(mappedBy = "user")
-    private List<ToDo> toDoes = new ArrayList<>();
+    private List<ToDo> toDos = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
@@ -46,7 +46,7 @@ public class User {
     }
 
     //==생성 메서드==//
-    public static User createUser(CreateUserRequest createUserRequest) {
+    public static User create(CreateUserRequest createUserRequest) {
         return new User(createUserRequest.getUsername(), createUserRequest.getRawPassword(), createUserRequest.getEmail());
     }
 }
