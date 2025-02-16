@@ -1,6 +1,5 @@
 package park_su_park.backend.service;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,7 +7,6 @@ import park_su_park.backend.domain.User;
 import park_su_park.backend.dto.requestBody.CreateUserRequest;
 import park_su_park.backend.exception.DuplicateResourceException;
 import park_su_park.backend.exception.ResourceNotFoundException;
-import park_su_park.backend.exception.UnauthorizedAccessException;
 import park_su_park.backend.repository.UserRepository;
 
 import java.text.MessageFormat;
@@ -18,7 +16,6 @@ import java.text.MessageFormat;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final static String UNAUTHORIZED_ACCESS_ACTION = "로그인 정보가 유효하지 않거나 만료 되었습니다.";
     private final UserRepository userRepository;
 
     public Long join(CreateUserRequest createUserRequest) {
@@ -65,13 +62,5 @@ public class UserService {
                             MessageFormat.format("다른 사용자가 사용중인 email 입니다: {0}", createUserRequest.getEmail())
                     );
                 });
-    }
-
-    public Long getUserIdFromSession(HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
-            throw new UnauthorizedAccessException(UNAUTHORIZED_ACCESS_ACTION);
-        }
-        return userId;
     }
 }
