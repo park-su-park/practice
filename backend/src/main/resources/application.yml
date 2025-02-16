@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/practice;
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create # drop table하고 create 테이블을 함
+    properties:
+      hibernate:
+        # show_sql: true
+        format_sql: true # SQL format으로 보여줌
+
+  logging:
+    level: # log로 남김
+      org.hibernate.SQL: debug
