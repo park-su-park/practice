@@ -1,4 +1,4 @@
-package com.parksupark.paractice.feature.auth.presentation.login.components
+package com.parksupark.paractice.feature.auth.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,7 +17,9 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Key
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.ImeAction
@@ -37,20 +40,35 @@ import com.parksupark.paractice.core.designsystem.PTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
+fun UsernameTextField(
+    state: TextFieldState,
+    modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onKeyboardAction: KeyboardActionHandler? = null,
+) {
+    AuthTextField(
+        state = state,
+        startIcon = Icons.Outlined.Person,
+        hint = "Username",
+        modifier = modifier,
+        keyboardOptions = keyboardOptions,
+        onKeyboardAction = onKeyboardAction,
+    )
+}
+
+@Composable
 fun EmailTextField(
     state: TextFieldState,
-    onKeyboardAction: KeyboardActionHandler,
     modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onKeyboardAction: KeyboardActionHandler? = null,
 ) {
-    LoginTextField(
+    AuthTextField(
         state = state,
         startIcon = Icons.Outlined.Email,
         hint = "Email",
         modifier = modifier,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next,
-        ),
+        keyboardOptions = keyboardOptions,
         onKeyboardAction = onKeyboardAction,
     )
 }
@@ -58,25 +76,24 @@ fun EmailTextField(
 @Composable
 fun PasswordTextField(
     state: TextFieldState,
-    onKeyboardAction: KeyboardActionHandler,
+    hint: String,
     modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onKeyboardAction: KeyboardActionHandler? = null,
 ) {
-    LoginTextField(
+    AuthTextField(
         state = state,
         startIcon = Icons.Outlined.Key,
-        hint = "Password",
+        hint = hint,
         modifier = modifier,
         isPassword = true,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done,
-        ),
+        keyboardOptions = keyboardOptions,
         onKeyboardAction = onKeyboardAction,
     )
 }
 
 @Composable
-private fun LoginTextField(
+private fun AuthTextField(
     state: TextFieldState,
     startIcon: ImageVector,
     hint: String,
@@ -131,6 +148,8 @@ private fun LoginTextField(
                 modifier = Modifier.onFocusChanged {
                     isFocused = it.isFocused
                 },
+                textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
                 decorator = decorator,
                 keyboardOptions = keyboardOptions,
                 onKeyboardAction = onKeyboardAction,
@@ -141,6 +160,8 @@ private fun LoginTextField(
                 modifier = Modifier.onFocusChanged {
                     isFocused = it.isFocused
                 },
+                textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
                 decorator = decorator,
                 keyboardOptions = keyboardOptions,
                 onKeyboardAction = onKeyboardAction,
@@ -151,15 +172,21 @@ private fun LoginTextField(
 
 @Composable
 @Preview
-private fun LoginTextFieldPreview() {
+private fun AuthTextFieldPreview() {
     PTheme {
         Column {
             EmailTextField(
                 state = TextFieldState(),
+                keyboardOptions = KeyboardOptions.Default,
                 onKeyboardAction = { },
             )
             PasswordTextField(
                 state = TextFieldState(),
+                hint = "Password",
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done,
+                ),
                 onKeyboardAction = { },
             )
         }
