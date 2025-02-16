@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import park_su_park.backend.dto.requestBody.CreateToDoRequest;
 import park_su_park.backend.dto.responseBody.ToDoDataResponse;
 import park_su_park.backend.service.ToDoService;
-import park_su_park.backend.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,7 +16,6 @@ import park_su_park.backend.service.UserService;
 public class ToDoController {
 
     private final ToDoService toDoService;
-    private final UserService userService;
 
     @PostMapping("/create")
     public ResponseEntity<ToDoDataResponse> createToDo(@RequestBody @Valid CreateToDoRequest createToDoRequest, HttpSession session) {
