@@ -23,4 +23,20 @@ class AuthRepositoryImpl(
         )
         return result.asEmptyDataResult()
     }
+
+    override suspend fun signup(
+        username: String,
+        email: String,
+        password: String,
+    ): EmptyResult<DataError.Network> {
+        val result = httpClient.post<SignupRequest, Unit>(
+            route = "/auth/sign-up",
+            body = SignupRequest(
+                username = username,
+                email = email,
+                rawPassword = password,
+            ),
+        )
+        return result.asEmptyDataResult()
+    }
 }

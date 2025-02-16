@@ -91,6 +91,7 @@ private fun SignupScreenContent(
 
         AuthButton(
             text = "Sign up",
+            isLoading = state.isSignupLoading,
             onClick = actions.onClickSignup,
             modifier = Modifier.fillMaxWidth(),
         )
