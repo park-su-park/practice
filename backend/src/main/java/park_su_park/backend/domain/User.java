@@ -6,17 +6,20 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import park_su_park.backend.request_dto.RequestUserDto;
+import park_su_park.backend.requestDto.RequestUserDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 public class User {
-    @Id @GeneratedValue
+
+    @Id
+    @GeneratedValue
     @Column(name = "user_id")
     private Long id;
 
@@ -34,7 +37,7 @@ public class User {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime create_time;
+    private LocalDateTime createTime;
 
     public static User createUser(RequestUserDto requestUserDto) {
         User user = new User();

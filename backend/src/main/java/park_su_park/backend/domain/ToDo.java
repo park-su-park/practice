@@ -11,11 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 
 public class ToDo {
-    @Id @GeneratedValue
+
+    @Id
+    @GeneratedValue
     @Column(name = "to_do_id")
     private Long id;
 

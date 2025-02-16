@@ -1,4 +1,4 @@
-package park_su_park.backend.response_dto;
+package park_su_park.backend.responseDto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,4 +14,5 @@ public class ResponseDto {
         this.message = message;
         this.data = data;
     }
+
 }
