@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import park_su_park.backend.domain.User;
+import park_su_park.backend.exception.NotExistUserException;
 import park_su_park.backend.exception.ValidateMemberException;
 import park_su_park.backend.requestDto.RequestUserDto;
 import park_su_park.backend.repository.UserRepository;
@@ -44,4 +45,24 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public void updateUser(Long id, RequestUserDto requestUserDto) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new NotExistUserException("존재하지 않는 사용자 입니다"));
+        updateUserByDto(requestUserDto, user);
+    }
+
+
+
+    @Transactional
+    public void deleteUser(Long id) {
+        User findUser = userRepository.findById(id).orElseThrow(() -> new NotExistUserException("존재하지 않는 사용자입니다"));
+        userRepository.delete(findUser);
+    }
+
+    private static void updateUserByDto(RequestUserDto requestUserDto, User user) {
+        user.setUsername(requestUserDto.getUsername());
+        user.setPassword(requestUserDto.getPassword());
+        user.setEmail(requestUserDto.getEmail());
+    }
 }
