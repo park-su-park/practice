@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import park_su_park.backend.domain.ToDo;
 import park_su_park.backend.domain.User;
 import park_su_park.backend.dto.requestBody.CreateToDoRequest;
-import park_su_park.backend.dto.responseBody.ToDoDataResponse;
+import park_su_park.backend.dto.responseBody.ToDoData;
 import park_su_park.backend.exception.ForbiddenAccessException;
 import park_su_park.backend.exception.ResourceNotFoundException;
 import park_su_park.backend.repository.ToDoRepository;
@@ -24,12 +24,12 @@ public class ToDoService {
     private final ToDoRepository toDoRepository;
     private final UserService userService;
 
-    public ToDoDataResponse createToDo(CreateToDoRequest createToDoRequest, HttpSession session) {
+    public ToDoData createToDo(CreateToDoRequest createToDoRequest, HttpSession session) {
         Long userId = SessionUtil.getUserIdFromSession(session);
-        User user = userService.findUserById(userId);
+        User user = userService.findUser(userId);
 
         ToDo toDo = saveToDo(createToDoRequest, user);
-        return ToDoDataResponse.create(toDo);
+        return ToDoData.create(toDo);
     }
 
     private ToDo saveToDo(CreateToDoRequest createToDoRequest, User user) {
@@ -47,33 +47,33 @@ public class ToDoService {
                 ));
     }
 
-    public ToDoDataResponse getToDo(Long toDoId) {
+    public ToDoData getToDoData(Long toDoId) {
         ToDo toDo = findToDo(toDoId);
 
-        return ToDoDataResponse.create(toDo);
+        return ToDoData.create(toDo);
     }
 
-    public ToDoDataResponse updateToDo(CreateToDoRequest updateToDoRequest, Long toDoId, HttpSession session) {
-        ToDo toDo = getAuthorizedToDo(toDoId, session);
+    public ToDoData updateToDo(CreateToDoRequest updateToDoRequest, Long toDoId, HttpSession session) {
+        checkAuthorization(toDoId, session);
+        ToDo toDo = findToDo(toDoId);
         toDo.update(updateToDoRequest);
 
-        return ToDoDataResponse.create(toDo);
+        return ToDoData.create(toDo);
     }
 
     public void deleteToDo(Long toDoId, HttpSession session) {
-        ToDo toDo = getAuthorizedToDo(toDoId, session);
+        checkAuthorization(toDoId, session);
+        ToDo toDo = findToDo(toDoId);
 
         toDoRepository.delete(toDo);
     }
 
-    private ToDo getAuthorizedToDo(Long toDoId, HttpSession session) {
+    private void checkAuthorization(Long toDoId, HttpSession session) {
         Long userId = SessionUtil.getUserIdFromSession(session);
         ToDo toDo = findToDo(toDoId);
 
         if (!toDo.getUser().getId().equals(userId)) {
             throw new ForbiddenAccessException(FORBIDDEN_ACCESS_ACTION);
         }
-
-        return toDo;
     }
 }
