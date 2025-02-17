@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import park_su_park.backend.domain.User;
-import park_su_park.backend.dto.CreateUserRequest;
-import park_su_park.backend.dto.UserDataResponse;
+import park_su_park.backend.dto.requestBody.CreateUserRequest;
+import park_su_park.backend.dto.responseBody.UserDataResponse;
 import park_su_park.backend.service.UserService;
 
 @RestController

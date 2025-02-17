@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import park_su_park.backend.exception.DuplicateResourceException;
+import park_su_park.backend.exception.ForbiddenAccessException;
 import park_su_park.backend.exception.ResourceNotFoundException;
+import park_su_park.backend.exception.UnauthorizedAccessException;
 
 @ControllerAdvice
 @Slf4j
@@ -18,8 +20,18 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFound(ResourceNotFoundException e) {
+    public ResponseEntity<String> handleNotFound(Exception e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<String> handleUnauthorized(Exception e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ForbiddenAccessException.class)
+    public ResponseEntity<String> handleForbidden(Exception e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
