@@ -1,25 +1,43 @@
 package park_su_park.backend.controller;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import park_su_park.backend.domain.User;
 import park_su_park.backend.dto.requestBody.CreateUserRequest;
-import park_su_park.backend.dto.responseBody.UserDataResponse;
-import park_su_park.backend.service.UserService;
+import park_su_park.backend.dto.requestBody.LoginRequest;
+import park_su_park.backend.dto.responseBody.ApiResponseBody;
+import park_su_park.backend.dto.responseBody.UserData;
+import park_su_park.backend.service.AuthService;
+import park_su_park.backend.util.message.AuthResponseMessage;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<UserDataResponse> signIn(@RequestBody @Valid CreateUserRequest createUserRequest) {
-        Long savedUserId = userService.join(createUserRequest);
-        User user = userService.findUserById(savedUserId);
-        return ResponseEntity.ok(UserDataResponse.createUserDataResponse(user));
+    public ResponseEntity<ApiResponseBody> signIn(@RequestBody @Valid CreateUserRequest createUserRequest) {
+        UserData userData = authService.signIn(createUserRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseBody.success(AuthResponseMessage.SIGN_IN_SUCCESS, userData));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponseBody> login(@RequestBody @Valid LoginRequest loginRequest, HttpSession session) {
+        authService.login(loginRequest, session);
+
+        return ResponseEntity.ok(ApiResponseBody.success(AuthResponseMessage.LOGIN_SUCCESS, null));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponseBody> logout(HttpSession session) {
+        authService.logout(session);
+
+        return ResponseEntity.ok(ApiResponseBody.success(AuthResponseMessage.LOGOUT_SUCCESS, null));
     }
 }
