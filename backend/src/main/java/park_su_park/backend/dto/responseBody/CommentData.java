@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommentDataResponse {
+public class CommentData implements ApiResponseData {
 
     private final Long commentId;
     private final Long userId;
@@ -19,7 +19,7 @@ public class CommentDataResponse {
     private final LocalDateTime updateTime;
 
     //==생성 메서드==//
-    public static CommentDataResponse create(Comment comment) {
-        return new CommentDataResponse(comment.getId(), comment.getUser().getId(), comment.getToDo().getId(), comment.getContent(), comment.getCreatedTime(), comment.getUpdateTime());
+    public static CommentData create(Comment comment) {
+        return new CommentData(comment.getId(), comment.getUser().getId(), comment.getToDo().getId(), comment.getContent(), comment.getCreatedTime(), comment.getUpdateTime());
     }
 }

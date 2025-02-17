@@ -9,14 +9,15 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserDataResponse {
+public class UserData implements ApiResponseData {
 
+    private final Long userId;
     private final String username;
     private final String email;
     private final LocalDateTime createdTime;
 
     //==생성 메서드==//
-    public static UserDataResponse createUserDataResponse(User user) {
-        return new UserDataResponse(user.getUsername(), user.getEmail(), user.getCreatedTime());
+    public static UserData create(User user) {
+        return new UserData(user.getId(), user.getUsername(), user.getEmail(), user.getCreatedTime());
     }
 }
