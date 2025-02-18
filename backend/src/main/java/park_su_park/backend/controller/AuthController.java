@@ -1,7 +1,6 @@
 package park_su_park.backend.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,7 @@ import park_su_park.backend.dto.requestBody.LoginRequest;
 import park_su_park.backend.dto.responseBody.ApiResponseBody;
 import park_su_park.backend.dto.responseBody.UserData;
 import park_su_park.backend.service.AuthService;
-import park_su_park.backend.util.message.AuthResponseMessage;
+import park_su_park.backend.util.constant.AuthResponseMessage;
 
 @RestController
 @RequiredArgsConstructor

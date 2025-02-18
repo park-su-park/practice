@@ -10,7 +10,7 @@ import park_su_park.backend.dto.requestBody.CreateToDoRequest;
 import park_su_park.backend.dto.responseBody.ApiResponseBody;
 import park_su_park.backend.dto.responseBody.ToDoData;
 import park_su_park.backend.service.ToDoService;
-import park_su_park.backend.util.message.ToDoResponseMessage;
+import park_su_park.backend.util.constant.ToDoResponseMessage;
 
 @RestController
 @RequiredArgsConstructor

@@ -10,7 +10,7 @@ import park_su_park.backend.dto.requestBody.CreateCommentRequest;
 import park_su_park.backend.dto.responseBody.ApiResponseBody;
 import park_su_park.backend.dto.responseBody.CommentData;
 import park_su_park.backend.service.CommentService;
-import park_su_park.backend.util.message.CommentResponseMessage;
+import park_su_park.backend.util.constant.CommentResponseMessage;
 
 @RestController
 @RequiredArgsConstructor
