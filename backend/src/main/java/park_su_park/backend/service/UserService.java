@@ -19,15 +19,12 @@ public class UserService {
 
     @Transactional
     public ResponseUserDto save(RequestUserDto requestUserDto) {
-        User user = User.createUser(requestUserDto);
+        User user = User.create(requestUserDto);
         validateUser(requestUserDto);
         User savedUser = userRepository.save(user);
         return ResponseUserDto.of(savedUser);
     }
 
-//    public ResponseUserDto findUser(String username, String email) {
-//
-//    }
 
     private void validateUser(RequestUserDto requestUserDto){
         //중복 email,username 확인
@@ -45,7 +42,7 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseUserDto updateUser(Long id, RequestUserDto requestUserDto) {
+    public ResponseUserDto update(Long id, RequestUserDto requestUserDto) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new NotExistUserException("존재하지 않는 사용자 입니다"));
         updateUserByDto(requestUserDto, user);
@@ -55,7 +52,7 @@ public class UserService {
 
 
     @Transactional
-    public void deleteUser(Long id) {
+    public void delete(Long id) {
         User findUser = userRepository.findById(id).orElseThrow(() -> new NotExistUserException("존재하지 않는 사용자입니다"));
         userRepository.delete(findUser);
     }
@@ -64,5 +61,13 @@ public class UserService {
         user.setUsername(requestUserDto.getUsername());
         user.setPassword(requestUserDto.getPassword());
         user.setEmail(requestUserDto.getEmail());
+    }
+
+    public User findUserByUsernameOrEmail(String username, String email) {
+        return Optional.ofNullable(
+            username != null ? userRepository.findByUsername(username).orElse(null) :
+                email != null ? userRepository.findByEmail(email).orElse(null) :
+                    null
+        ).orElseThrow(() -> new ValidateException("파라미터를 입력하세요"));
     }
 }

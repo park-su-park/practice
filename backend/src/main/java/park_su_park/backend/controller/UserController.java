@@ -1,7 +1,6 @@
 package park_su_park.backend.controller;
 
 import jakarta.validation.Valid;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,36 +44,26 @@ public class UserController {
             throw new ValidateException("username과 email 중 하나만 입력하세요");
         }
 
-        User user = findUserByUsernameOrEmail(username, email);
+        User user = userService.findUserByUsernameOrEmail(username, email);
         ResponseUserDto responseUserDto = ResponseUserDto.of(user);
 
         return ResponseEntity.ok(responseUserDto);
     }
 
-    /**
-     * username 또는 email을 이용해 사용자 조회
-     */
-    private User findUserByUsernameOrEmail(String username, String email) {
-        return Optional.ofNullable(
-            username != null ? userRepository.findByUsername(username).orElse(null) :
-                email != null ? userRepository.findByEmail(email).orElse(null) :
-                    null
-        ).orElseThrow(() -> new ValidateException("파라미터를 입력하세요"));
-    }
 
     //U
-    @PostMapping("/update/{id}")
-    public ResponseEntity<ResponseUserDto> updateUser(@PathVariable(name = "userid") Long id,
+    @PostMapping("/update/{userId}")
+    public ResponseEntity<ResponseUserDto> updateUser(@PathVariable(name = "userid") Long userId,
         @Valid @RequestBody RequestUserDto requestUserDto) {
-        ResponseUserDto responseUserDto = userService.updateUser(id, requestUserDto);
+        ResponseUserDto responseUserDto = userService.update(userId, requestUserDto);
         return ResponseEntity.ok(responseUserDto);
     }
 
 
     //D
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+        userService.delete(userId);
         return ResponseEntity.ok("message : 유저 삭제 성공");
     }
 }

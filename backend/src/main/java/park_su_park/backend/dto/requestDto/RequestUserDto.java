@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class RequestUserDto {
 
-    @Size(max = 4, message = "잘못된 사용자명 형식입니다.")
+    @Size(max = 8, message = "잘못된 사용자명 형식입니다.")
     private String username;
     @NotNull(message = "비밀번호를 반드시 입력해야합니다.")
     private String password;

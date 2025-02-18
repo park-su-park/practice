@@ -23,7 +23,7 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<ToDo> toDoes = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
@@ -39,7 +39,7 @@ public class User {
     @Column(updatable = false)
     private LocalDateTime createTime;
 
-    public static User createUser(RequestUserDto requestUserDto) {
+    public static User create(RequestUserDto requestUserDto) {
         User user = new User();
         user.setUsername(requestUserDto.getUsername());
         user.setPassword(requestUserDto.getPassword());
