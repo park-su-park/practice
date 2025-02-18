@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import park_su_park.backend.domain.User;
-import park_su_park.backend.exception.NotExistUserException;
-import park_su_park.backend.exception.ValidateException;
-import park_su_park.backend.repository.UserRepository;
 import park_su_park.backend.dto.requestDto.RequestUserDto;
 import park_su_park.backend.dto.responseDto.ResponseUserDto;
+import park_su_park.backend.exception.ValidateException;
+import park_su_park.backend.repository.UserRepository;
 import park_su_park.backend.service.UserService;
 
 @RestController
@@ -41,32 +40,26 @@ public class UserController {
     public ResponseEntity<ResponseUserDto> readUser(
         @RequestParam(name = "username", required = false) String username,
         @RequestParam(name = "email", required = false) String email) {
-        //username email 동시 조회 불가
+
         if (username != null && email != null) {
             throw new ValidateException("username과 email 중 하나만 입력하세요");
         }
-        //username으로 조회
-        else if (username != null) {
-            Optional<User> byUsername = userRepository.findByUsername(username);
-            if (byUsername.isPresent()) {
-                ResponseUserDto responseUserDto = ResponseUserDto.of(byUsername.get());
-                return ResponseEntity.ok(responseUserDto);
-            } else {
-                throw new NotExistUserException("등록되지 않은 사용자입니다.");
-            }
-            //email 조회
-        } else if (email != null) {
-            Optional<User> byEmail = userRepository.findByEmail(email);
-            if (byEmail.isPresent()) {
-                ResponseUserDto responseUserDto = ResponseUserDto.of(byEmail.get());
-                return ResponseEntity.ok(responseUserDto);
-            } else {
-                throw new NotExistUserException("등록되지 않은 사용자 입니다.");
-            }
-            //파라미터가 없는 경우
-        } else {
-            throw new ValidateException("파라미터를 입력하세요");
-        }
+
+        User user = findUserByUsernameOrEmail(username, email);
+        ResponseUserDto responseUserDto = ResponseUserDto.of(user);
+
+        return ResponseEntity.ok(responseUserDto);
+    }
+
+    /**
+     * username 또는 email을 이용해 사용자 조회
+     */
+    private User findUserByUsernameOrEmail(String username, String email) {
+        return Optional.ofNullable(
+            username != null ? userRepository.findByUsername(username).orElse(null) :
+                email != null ? userRepository.findByEmail(email).orElse(null) :
+                    null
+        ).orElseThrow(() -> new ValidateException("파라미터를 입력하세요"));
     }
 
     //U
