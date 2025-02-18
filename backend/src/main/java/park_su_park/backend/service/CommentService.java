@@ -12,7 +12,8 @@ import park_su_park.backend.dto.responseBody.CommentData;
 import park_su_park.backend.exception.ForbiddenAccessException;
 import park_su_park.backend.exception.ResourceNotFoundException;
 import park_su_park.backend.repository.CommentRepository;
-import park_su_park.backend.util.SessionUtil;
+import park_su_park.backend.util.constant.CommentResponseMessage;
+import park_su_park.backend.util.constant.SessionConstant;
 
 import java.text.MessageFormat;
 
@@ -21,13 +22,12 @@ import java.text.MessageFormat;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private static final String FORBIDDEN_ACCESS_ACTION = "해당 댓글을 수정 및 삭제할 권한이 없습니다";
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final ToDoService toDoService;
 
     public CommentData createComment(CreateCommentRequest createCommentRequest, Long toDoId, HttpSession session) {
-        Long userId = SessionUtil.getUserIdFromSession(session);
+        Long userId = (Long) session.getAttribute(SessionConstant.SESSION_USER_ID);
         User user = userService.findUser(userId);
         ToDo toDo = toDoService.findToDo(toDoId);
 
@@ -74,11 +74,11 @@ public class CommentService {
     }
 
     private void getAuthorizedComment(Long commentId, HttpSession session){
-        Long userId = SessionUtil.getUserIdFromSession(session);
+        Long userId = (Long) session.getAttribute(SessionConstant.SESSION_USER_ID);
         Comment comment = findComment(commentId);
 
         if (!comment.getUser().getId().equals(userId)) {
-            throw new ForbiddenAccessException(FORBIDDEN_ACCESS_ACTION);
+            throw new ForbiddenAccessException(CommentResponseMessage.COMMENT_FORBIDDEN_ACTION);
         }
     }
 }
