@@ -13,7 +13,7 @@ import park_su_park.backend.exception.*;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({DuplicateResourceException.class, IllegalArgumentException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler({DuplicateResourceException.class, IllegalArgumentException.class, MethodArgumentNotValidException.class, IllegalStateException.class})
     public ResponseEntity<ApiResponseBody> handleBadRequest(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseBody.failure(e.getMessage()));
     }
