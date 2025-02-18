@@ -21,12 +21,16 @@ sealed interface AuthRoute {
     data object SignUp : AuthRoute
 }
 
-fun NavGraphBuilder.authGraph(navController: NavHostController) {
+fun NavGraphBuilder.authGraph(
+    navController: NavHostController,
+    onShowSnackbar: suspend (message: String, actionLabel: String?) -> Boolean,
+) {
     navigation<AuthRoute.Root>(
         startDestination = AuthRoute.Login,
     ) {
         composable<AuthRoute.Login> {
             LoginRoute(
+                onShowSnackbar = onShowSnackbar,
                 navigateToHome = { /* TODO */ },
                 navigateToSignup = navController::navigateToSignup,
                 navigateToForgotPassword = { /* TODO */ },
@@ -34,6 +38,7 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
         }
         composable<AuthRoute.SignUp> {
             SignupRoute(
+                onShowSnackbar = onShowSnackbar,
                 navigateUp = navController::navigateUp,
             )
         }

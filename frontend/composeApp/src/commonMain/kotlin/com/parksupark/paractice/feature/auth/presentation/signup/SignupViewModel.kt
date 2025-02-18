@@ -34,8 +34,8 @@ class SignupViewModel(
 
             if (response is Result.Success) {
                 _event.send(SignupEvent.SignupSuccess)
-            } else {
-                _event.send(SignupEvent.SignupFailure)
+            } else if (response is Result.Error) {
+                _event.send(SignupEvent.SignupFailure(response.error.name))
             }
             _uiStateFlow.value = _uiStateFlow.value.copy(isSignupLoading = false)
         }

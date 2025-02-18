@@ -13,7 +13,9 @@ data class SignupState(
 sealed interface SignupEvent {
     data object SignupSuccess : SignupEvent
 
-    data object SignupFailure : SignupEvent
+    data class SignupFailure(
+        val message: String,
+    ) : SignupEvent
 }
 
 data class SignupActions(
