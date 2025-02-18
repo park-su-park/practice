@@ -15,6 +15,10 @@ data class LoginState(
  * Login Events emitted from the ViewModel
  **/
 sealed interface LoginEvent {
+    data class Error(
+        val message: String,
+    ) : LoginEvent
+
     data object LoginSuccess : LoginEvent
 }
 

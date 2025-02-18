@@ -2,6 +2,7 @@ package com.parksupark.paractice.feature.auth.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.parksupark.paractice.core.domain.util.Result
 import com.parksupark.paractice.feature.auth.domain.usecase.LoginUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +30,13 @@ class LoginViewModel(
                 password = uiStateFlow.value.passwordState.text
                     .toString(),
             )
+
+            if (result is Result.Success) {
+                _event.send(LoginEvent.LoginSuccess)
+            } else if (result is Result.Error) {
+                _event.send(LoginEvent.Error(result.error.name))
+            }
+            _uiStateFlow.value = uiStateFlow.value.copy(isLoggingIn = false)
         }
     }
 

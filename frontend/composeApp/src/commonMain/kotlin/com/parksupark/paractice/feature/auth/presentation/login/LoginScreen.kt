@@ -92,7 +92,12 @@ private fun LoginContent(
         )
         VerticalSpacer(height = 24.dp)
 
-        AuthButton(text = "Login", onClick = actions.onClickLogin, modifier = Modifier.fillMaxWidth())
+        AuthButton(
+            text = "Login",
+            isLoading = state.isLoggingIn,
+            onClick = actions.onClickLogin,
+            modifier = Modifier.fillMaxWidth(),
+        )
         VerticalSpacer(height = 24.dp)
 
         SignUpButton(
