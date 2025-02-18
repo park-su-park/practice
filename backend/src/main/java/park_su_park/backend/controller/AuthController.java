@@ -1,5 +1,6 @@
 package park_su_park.backend.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +21,23 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/sign-in")
-    public ResponseEntity<ApiResponseBody> signIn(@RequestBody @Valid CreateUserRequest createUserRequest) {
-        UserData userData = authService.signIn(createUserRequest);
+    @PostMapping("/sign-up")
+    public ResponseEntity<ApiResponseBody> signUp(@RequestBody @Valid CreateUserRequest createUserRequest) {
+        UserData userData = authService.signUp(createUserRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseBody.success(AuthResponseMessage.SIGN_IN_SUCCESS, userData));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponseBody> login(@RequestBody @Valid LoginRequest loginRequest, HttpSession session) {
-        authService.login(loginRequest, session);
+    public ResponseEntity<ApiResponseBody> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest request) {
+        authService.login(loginRequest, request);
 
         return ResponseEntity.ok(ApiResponseBody.success(AuthResponseMessage.LOGIN_SUCCESS, null));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponseBody> logout(HttpSession session) {
-        authService.logout(session);
+    public ResponseEntity<ApiResponseBody> logout(HttpServletRequest request) {
+        authService.logout(request);
 
         return ResponseEntity.ok(ApiResponseBody.success(AuthResponseMessage.LOGOUT_SUCCESS, null));
     }
