@@ -1,5 +1,6 @@
 package park_su_park.backend.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,38 +11,50 @@ import park_su_park.backend.dto.requestBody.LoginRequest;
 import park_su_park.backend.dto.responseBody.UserData;
 import park_su_park.backend.exception.AuthenticationFailedException;
 import park_su_park.backend.exception.ResourceNotFoundException;
+import park_su_park.backend.util.constant.AuthResponseMessage;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AuthService {
 
-    private static final String AUTHENTICATION_FAILED_ACTION = "이메일 혹은 비밀번호가 올바르지 않습니다.";
     private final UserService userService;
 
-    public UserData signIn(CreateUserRequest createUserRequest) {
+    public UserData signUp(CreateUserRequest createUserRequest) {
         userService.checkExists(createUserRequest);
 
         return userService.join(createUserRequest);
     }
 
-    public void login(LoginRequest loginRequest, HttpSession session) {
+    public void login(LoginRequest loginRequest, HttpServletRequest request) {
         try {
-            UserData userData = userService.findUserByEmail(loginRequest.getEmail());
+            Long userId = validate(loginRequest);
 
-            User user = userService.findUser(userData.getUserId());
-
-            if (!user.getPassword().equals(loginRequest.getRawPassword())) {
-                throw new AuthenticationFailedException(AUTHENTICATION_FAILED_ACTION);
-            }
-
-            session.setAttribute("userId", user.getId());
+            HttpSession session = request.getSession();
+            session.setAttribute("userId", userId);
+            session.setMaxInactiveInterval(1800);
         } catch (ResourceNotFoundException e) {
-            throw new AuthenticationFailedException(AUTHENTICATION_FAILED_ACTION);
+            throw new AuthenticationFailedException(AuthResponseMessage.AUTHENTICATION_FAILED_ACTION);
         }
     }
 
-    public void logout(HttpSession session) {
+    public void logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        if (session == null) {
+            throw new IllegalStateException(AuthResponseMessage.LOGOUT_BAD_REQUEST);
+        }
         session.invalidate();
+    }
+
+    public Long validate(LoginRequest loginRequest) {
+        UserData userData = userService.findUserByEmail(loginRequest.getEmail());
+
+        User user = userService.findUser(userData.getUserId());
+
+        if (!user.getPassword().equals(loginRequest.getRawPassword())) {
+            throw new AuthenticationFailedException(AuthResponseMessage.AUTHENTICATION_FAILED_ACTION);
+        }
+        return user.getId();
     }
 }
