@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import park_su_park.backend.requestDto.RequestUserDto;
+import park_su_park.backend.dto.requestDto.RequestUserDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package park_su_park.backend.responseDto;
+package park_su_park.backend.dto.responseDto;
 
 import java.time.LocalDateTime;
 import lombok.Getter;

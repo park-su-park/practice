@@ -1,4 +1,4 @@
-package park_su_park.backend.responseDto;
+package park_su_park.backend.dto.responseDto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
