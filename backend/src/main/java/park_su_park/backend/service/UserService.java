@@ -50,7 +50,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public void checkExists(CreateUserRequest createUserRequest) {
+    public void validateUniqueUser(CreateUserRequest createUserRequest) {
         String username = createUserRequest.getUsername();
         if(userRepository.existsUserByUsername(username)){
             throw new DuplicateResourceException(
