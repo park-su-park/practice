@@ -1,6 +1,7 @@
 package park_su_park.backend.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,14 +30,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponseBody> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest request) {
-        authService.login(loginRequest, request);
+        HttpSession session = request.getSession();
+        authService.login(loginRequest, session);
 
         return ResponseEntity.ok(ApiResponseBody.success(AuthResponseMessage.LOGIN_SUCCESS, null));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<ApiResponseBody> logout(HttpServletRequest request) {
-        authService.logout(request);
+        HttpSession session = request.getSession(false);
+        authService.logout(session);
 
         return ResponseEntity.ok(ApiResponseBody.success(AuthResponseMessage.LOGOUT_SUCCESS, null));
     }

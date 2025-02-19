@@ -1,6 +1,5 @@
 package park_su_park.backend.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,16 +20,15 @@ public class AuthService {
     private final UserService userService;
 
     public UserData signUp(CreateUserRequest createUserRequest) {
-        userService.checkExists(createUserRequest);
+        userService.validateUniqueUser(createUserRequest);
 
         return userService.join(createUserRequest);
     }
 
-    public void login(LoginRequest loginRequest, HttpServletRequest request) {
+    public void login(LoginRequest loginRequest, HttpSession session) {
         try {
             Long userId = validate(loginRequest);
 
-            HttpSession session = request.getSession();
             session.setAttribute("userId", userId);
             session.setMaxInactiveInterval(1800);
         } catch (ResourceNotFoundException e) {
@@ -38,9 +36,7 @@ public class AuthService {
         }
     }
 
-    public void logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-
+    public void logout(HttpSession session) {
         if (session == null) {
             throw new IllegalStateException(AuthResponseMessage.LOGOUT_BAD_REQUEST);
         }
