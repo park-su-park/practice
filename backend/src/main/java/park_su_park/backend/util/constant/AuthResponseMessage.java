@@ -7,4 +7,5 @@ public interface AuthResponseMessage {
 
     String AUTHENTICATION_FAILED_ACTION = "이메일 혹은 비밀번호가 올바르지 않습니다.";
     String LOGOUT_BAD_REQUEST = "먼저 로그인 해주세요.";
+    String INVALID_LOGIN_CREDENTIAL = "로그인 정보가 유효하지 않거나 만료 되었습니다.";
 }
