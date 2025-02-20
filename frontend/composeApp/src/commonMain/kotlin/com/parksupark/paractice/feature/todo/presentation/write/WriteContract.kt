@@ -8,5 +8,6 @@ data class WriteState(
 )
 
 data class WriteActions(
-    val onConfirm: () -> Unit = { },
+    val onBackClick: () -> Unit = { },
+    val onSaveClick: () -> Unit = { },
 )
