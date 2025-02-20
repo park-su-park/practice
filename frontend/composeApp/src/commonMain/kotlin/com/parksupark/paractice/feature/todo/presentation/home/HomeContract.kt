@@ -9,5 +9,6 @@ data class HomeState(
 
 data class HomeActions(
     val onTodoDoneClick: (todoId: Long) -> Unit = { },
+    val onTodoWriteClick: () -> Unit = { },
     val onTodoBodyClick: (todoId: Long) -> Unit = { },
 )

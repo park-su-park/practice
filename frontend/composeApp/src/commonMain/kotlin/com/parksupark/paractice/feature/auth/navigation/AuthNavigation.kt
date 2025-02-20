@@ -4,9 +4,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.parksupark.paractice.feature.auth.presentation.login.LoginRoute
 import com.parksupark.paractice.feature.auth.presentation.signup.SignupRoute
+import com.parksupark.paractice.feature.todo.navigation.navigateToTodoHome
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -31,7 +33,14 @@ fun NavGraphBuilder.authGraph(
         composable<AuthRoute.Login> {
             LoginRoute(
                 onShowSnackbar = onShowSnackbar,
-                navigateToHome = { /* TODO */ },
+                navigateToHome = {
+                    navController.navigateToTodoHome(
+                        navOptions {
+                            popUpTo(AuthRoute.Root) { inclusive = true }
+                            launchSingleTop = true
+                        },
+                    )
+                },
                 navigateToSignup = navController::navigateToSignup,
                 navigateToForgotPassword = { /* TODO */ },
             )
