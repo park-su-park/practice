@@ -6,17 +6,26 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun WriteRoute(coordinator: WriteCoordinator = rememberWriteCoordinator()) {
+fun WriteRoute(
+    onShowSnackbar: suspend (message: String, actionLabel: String?) -> Boolean,
+    navigateUp: () -> Unit,
+    coordinator: WriteCoordinator = rememberWriteCoordinator(),
+) {
     val uiState by coordinator.screenStateFlow.collectAsStateWithLifecycle(WriteState())
 
-    val actions = rememberWriteActions(coordinator = coordinator)
+    val actions = rememberWriteActions(navigateUp = navigateUp, coordinator = coordinator)
 
     WriteScreen(state = uiState, actions = actions)
 }
 
 @Composable
-fun rememberWriteActions(coordinator: WriteCoordinator): WriteActions {
+fun rememberWriteActions(
+    navigateUp: () -> Unit,
+    coordinator: WriteCoordinator,
+): WriteActions {
     return remember(coordinator) {
-        WriteActions()
+        WriteActions(
+            onBackClick = navigateUp,
+        )
     }
 }

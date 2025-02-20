@@ -8,12 +8,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun HomeRoute(
     navigateToTodoDetails: () -> Unit,
+    navigateToTodoWrite: () -> Unit,
     coordinator: HomeCoordinator = rememberHomeCoordinator(),
 ) {
     val uiState by coordinator.screenStateFlow.collectAsStateWithLifecycle(HomeState())
 
     val actions = rememberHomeActions(
         navigateToTodoDetails = navigateToTodoDetails,
+        navigateToTodoWrite = navigateToTodoWrite,
         coordinator = coordinator,
     )
 
@@ -23,12 +25,14 @@ fun HomeRoute(
 @Composable
 fun rememberHomeActions(
     navigateToTodoDetails: () -> Unit,
+    navigateToTodoWrite: () -> Unit,
     coordinator: HomeCoordinator,
 ): HomeActions {
     val viewmodel = coordinator.viewModel
     return remember(coordinator) {
         HomeActions(
             onTodoDoneClick = { viewmodel.toggleTodoState(it) },
+            onTodoWriteClick = { navigateToTodoWrite() },
             onTodoBodyClick = { navigateToTodoDetails() },
         )
     }

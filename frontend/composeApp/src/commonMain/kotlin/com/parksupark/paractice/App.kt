@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.parksupark.paractice.core.designsystem.PTheme
 import com.parksupark.paractice.feature.auth.navigation.AuthRoute
 import com.parksupark.paractice.feature.auth.navigation.authGraph
+import com.parksupark.paractice.feature.todo.navigation.todoGraph
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
 
@@ -55,6 +56,7 @@ fun App() {
                     startDestination = AuthRoute.Root,
                 ) {
                     authGraph(navController = navHostController, onShowSnackbar = onShowSnackbar)
+                    todoGraph(navController = navHostController, onShowSnackbar = onShowSnackbar)
                 }
             }
         }
