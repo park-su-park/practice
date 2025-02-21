@@ -11,6 +11,7 @@ import park_su_park.backend.dto.responseBody.UserData;
 import park_su_park.backend.exception.AuthenticationFailedException;
 import park_su_park.backend.exception.ResourceNotFoundException;
 import park_su_park.backend.util.constant.AuthResponseMessage;
+import park_su_park.backend.web.security.encoder.PasswordEncoder;
 
 @Service
 @Transactional
@@ -18,6 +19,7 @@ import park_su_park.backend.util.constant.AuthResponseMessage;
 public class AuthService {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     public UserData signUp(CreateUserRequest createUserRequest) {
         userService.validateUniqueUser(createUserRequest);
@@ -27,7 +29,7 @@ public class AuthService {
 
     public void login(LoginRequest loginRequest, HttpSession session) {
         try {
-            Long userId = validate(loginRequest);
+            Long userId = validateCredentials(loginRequest);
 
             session.setAttribute("userId", userId);
             session.setMaxInactiveInterval(1800);
@@ -43,12 +45,10 @@ public class AuthService {
         session.invalidate();
     }
 
-    public Long validate(LoginRequest loginRequest) {
-        UserData userData = userService.findUserByEmail(loginRequest.getEmail());
+    public Long validateCredentials(LoginRequest loginRequest) {
+        User user = userService.findUserByEmail(loginRequest.getEmail());
 
-        User user = userService.findUser(userData.getUserId());
-
-        if (!user.getPassword().equals(loginRequest.getRawPassword())) {
+        if (!passwordEncoder.match(loginRequest.getRawPassword(), user.getPassword())) {
             throw new AuthenticationFailedException(AuthResponseMessage.AUTHENTICATION_FAILED_ACTION);
         }
         return user.getId();
