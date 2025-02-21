@@ -1,16 +1,17 @@
 package park_su_park.backend.dto.requestBody;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import park_su_park.backend.util.validation.Content;
+import park_su_park.backend.util.validation.Title;
 
 @Getter
 @RequiredArgsConstructor
 public class CreateToDoRequest {
 
-    @NotBlank
+    @Title
     private final String title;
 
-    @NotBlank
+    @Content
     private final String content;
 }
