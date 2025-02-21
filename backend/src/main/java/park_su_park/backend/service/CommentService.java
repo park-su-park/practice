@@ -8,11 +8,12 @@ import park_su_park.backend.domain.Comment;
 import park_su_park.backend.domain.ToDo;
 import park_su_park.backend.domain.User;
 import park_su_park.backend.dto.requestBody.CreateCommentRequest;
-import park_su_park.backend.dto.responseBody.CommentDataResponse;
+import park_su_park.backend.dto.responseBody.CommentData;
 import park_su_park.backend.exception.ForbiddenAccessException;
 import park_su_park.backend.exception.ResourceNotFoundException;
 import park_su_park.backend.repository.CommentRepository;
-import park_su_park.backend.util.SessionUtil;
+import park_su_park.backend.util.constant.CommentResponseMessage;
+import park_su_park.backend.util.constant.SessionConstant;
 
 import java.text.MessageFormat;
 
@@ -21,19 +22,18 @@ import java.text.MessageFormat;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private static final String FORBIDDEN_ACCESS_ACTION = "해당 댓글을 수정 및 삭제할 권한이 없습니다";
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final ToDoService toDoService;
 
-    public CommentDataResponse createComment(CreateCommentRequest createCommentRequest, Long toDoId, HttpSession session) {
-        Long userId = SessionUtil.getUserIdFromSession(session);
-        User user = userService.findUserById(userId);
+    public CommentData createComment(CreateCommentRequest createCommentRequest, Long toDoId, HttpSession session) {
+        Long userId = (Long) session.getAttribute(SessionConstant.SESSION_USER_ID);
+        User user = userService.findUser(userId);
         ToDo toDo = toDoService.findToDo(toDoId);
 
         Comment savedComment = saveComment(createCommentRequest, user, toDo);
 
-        return CommentDataResponse.create(savedComment);
+        return CommentData.create(savedComment);
     }
 
     private Comment saveComment(CreateCommentRequest createCommentRequest, User user, ToDo toDo) {
@@ -52,32 +52,33 @@ public class CommentService {
                 ));
     }
 
-    public CommentDataResponse getComment(Long commentId) {
+    public CommentData getComment(Long commentId) {
         Comment comment = findComment(commentId);
 
-        return CommentDataResponse.create(comment);
+        return CommentData.create(comment);
     }
 
-    public CommentDataResponse updateComment(CreateCommentRequest updateCommentRequest, Long commentId, HttpSession session) {
-        Comment comment = getAuthorizedComment(commentId, session);
+    public CommentData updateComment(CreateCommentRequest updateCommentRequest, Long commentId, HttpSession session) {
+        getAuthorizedComment(commentId, session);
+        Comment comment = findComment(commentId);
         comment.update(updateCommentRequest);
 
-        return CommentDataResponse.create(comment);
+        return CommentData.create(comment);
     }
 
     public void deleteComment(Long commentId, HttpSession session) {
-        Comment comment = getAuthorizedComment(commentId, session);
+        getAuthorizedComment(commentId, session);
+        Comment comment = findComment(commentId);
 
         commentRepository.delete(comment);
     }
 
-    private Comment getAuthorizedComment(Long commentId, HttpSession session){
-        Long userId = SessionUtil.getUserIdFromSession(session);
+    private void getAuthorizedComment(Long commentId, HttpSession session){
+        Long userId = (Long) session.getAttribute(SessionConstant.SESSION_USER_ID);
         Comment comment = findComment(commentId);
 
         if (!comment.getUser().getId().equals(userId)) {
-            throw new ForbiddenAccessException(FORBIDDEN_ACCESS_ACTION);
+            throw new ForbiddenAccessException(CommentResponseMessage.COMMENT_FORBIDDEN_ACTION);
         }
-        return comment;
     }
 }

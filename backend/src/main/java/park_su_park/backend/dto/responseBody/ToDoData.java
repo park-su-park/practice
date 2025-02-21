@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ToDoDataResponse {
+public class ToDoData implements ApiResponseData {
 
     private final Long toDoId;
     private final Long userId;
@@ -19,7 +19,7 @@ public class ToDoDataResponse {
     private final LocalDateTime updateTime;
 
     //==생성 메서드==//
-    public static ToDoDataResponse create(ToDo toDo){
-        return new ToDoDataResponse(toDo.getId(), toDo.getUser().getId(), toDo.getTitle(), toDo.getContent(), toDo.getCreatedTime(), toDo.getUpdateTime());
+    public static ToDoData create(ToDo toDo) {
+        return new ToDoData(toDo.getId(), toDo.getUser().getId(), toDo.getTitle(), toDo.getContent(), toDo.getCreatedTime(), toDo.getUpdateTime());
     }
 }
