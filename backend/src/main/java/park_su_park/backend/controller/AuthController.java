@@ -25,7 +25,7 @@ public class AuthController {
     public ResponseEntity<ApiResponseBody> signUp(@RequestBody @Valid CreateUserRequest createUserRequest) {
         UserData userData = authService.signUp(createUserRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseBody.success(AuthResponseMessage.SIGN_IN_SUCCESS, userData));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseBody.create(AuthResponseMessage.SIGN_IN_SUCCESS, userData));
     }
 
     @PostMapping("/login")
@@ -33,7 +33,7 @@ public class AuthController {
         HttpSession session = request.getSession();
         authService.login(loginRequest, session);
 
-        return ResponseEntity.ok(ApiResponseBody.success(AuthResponseMessage.LOGIN_SUCCESS, null));
+        return ResponseEntity.ok(ApiResponseBody.create(AuthResponseMessage.LOGIN_SUCCESS, null));
     }
 
     @PostMapping("/logout")
@@ -41,6 +41,6 @@ public class AuthController {
         HttpSession session = request.getSession(false);
         authService.logout(session);
 
-        return ResponseEntity.ok(ApiResponseBody.success(AuthResponseMessage.LOGOUT_SUCCESS, null));
+        return ResponseEntity.ok(ApiResponseBody.create(AuthResponseMessage.LOGOUT_SUCCESS, null));
     }
 }

@@ -23,27 +23,27 @@ public class CommentController {
     public ResponseEntity<ApiResponseBody> createComment(@RequestBody @Valid CreateCommentRequest createCommentRequest, @PathVariable Long toDoId, HttpSession session) {
         CommentData commentData = commentService.createComment(createCommentRequest, toDoId, session);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseBody.success(CommentResponseMessage.COMMENT_CREATION_SUCCESS, commentData));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseBody.create(CommentResponseMessage.COMMENT_CREATION_SUCCESS, commentData));
     }
 
     @GetMapping("/{commentId}")
     public ResponseEntity<ApiResponseBody> getComment(@PathVariable Long commentId) {
         CommentData commentData = commentService.getComment(commentId);
 
-        return ResponseEntity.ok(ApiResponseBody.success(CommentResponseMessage.COMMENT_FETCH_SUCCESS, commentData));
+        return ResponseEntity.ok(ApiResponseBody.create(CommentResponseMessage.COMMENT_FETCH_SUCCESS, commentData));
     }
 
     @PatchMapping("/{commentId}")
     public ResponseEntity<ApiResponseBody> updateComment(@RequestBody @Valid CreateCommentRequest updateCommentRequest, @PathVariable Long commentId, HttpSession session) {
         CommentData commentData = commentService.updateComment(updateCommentRequest, commentId, session);
 
-        return ResponseEntity.ok(ApiResponseBody.success(CommentResponseMessage.COMMENT_UPDATE_SUCCESS, commentData));
+        return ResponseEntity.ok(ApiResponseBody.create(CommentResponseMessage.COMMENT_UPDATE_SUCCESS, commentData));
     }
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<ApiResponseBody> deleteComment(@PathVariable Long commentId, HttpSession session) {
         commentService.deleteComment(commentId, session);
 
-        return ResponseEntity.ok(ApiResponseBody.success(CommentResponseMessage.COMMENT_DELETION_SUCCESS, null));
+        return ResponseEntity.ok(ApiResponseBody.create(CommentResponseMessage.COMMENT_DELETION_SUCCESS, null));
     }
 }
