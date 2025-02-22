@@ -17,8 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import park_su_park.backend.domain.User;
 import park_su_park.backend.dto.requestDto.RequestLogInDto;
+import park_su_park.backend.dto.responseData.ApiResponseBody;
 import park_su_park.backend.dto.responseDto.ResponseLogInDto;
 import park_su_park.backend.dto.responseData.UserData;
+import park_su_park.backend.exception.NotExistException;
+import park_su_park.backend.logIn.LogInterface;
+import park_su_park.backend.logIn.LoginService;
+import park_su_park.backend.message.USERMESSAGE;
 import park_su_park.backend.repository.UserRepository;
 
 @RestController
@@ -27,47 +32,26 @@ import park_su_park.backend.repository.UserRepository;
 public class LogController {
 
     private final LoginService loginService;
-    private final UserRepository userRepository;
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseLogInDto> login(@Valid @RequestBody RequestLogInDto dto,
+    public ResponseEntity<ApiResponseBody> login(@Valid @RequestBody RequestLogInDto dto,
         HttpServletRequest request,
         HttpServletResponse response) {
-        User loginUser = loginService.login(dto.getEmail(), dto.getPassword());
+        UserData userData = loginService.login(dto.getEmail(), dto.getPassword());
 
         HttpSession session = request.getSession();
-        session.setAttribute(LogInterface.LOGIN_USER, loginUser.getId());
+        session.setAttribute(LogInterface.LOGIN_USER, userData.getId());
 
-        return ResponseEntity.ok(new ResponseLogInDto(loginUser.getId(), loginUser.getUsername()));
+        return ResponseEntity.ok(new ApiResponseBody(LogInterface.LOGIN_SUCCESS, userData));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<ApiResponseBody> logout(HttpServletRequest request,
+        HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
-        return ResponseEntity.ok("로그아웃 성공");
-    }
-
-    @GetMapping
-    public ResponseEntity<Object> getUserInfo(
-        @SessionAttribute(name = LogInterface.LOGIN_USER, required = false) Long userId,
-        HttpServletRequest request) {
-        Optional<User> findUser = userRepository.findById(userId);
-        if (findUser.isPresent()) {
-            UserData userData = UserData.of(findUser.get());
-            return ResponseEntity.ok(userData);
-        }
-        //세션에 유저가 없을 시 로그인 화면으로 redirect
-        else{
-            return ResponseEntity.status(302).location(URI.create("/")).build();
-        }
-    }
-
-    private void expiredCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        return ResponseEntity.ok(new ApiResponseBody(LogInterface.LOGOUT_SUCCESS, null));
     }
 }

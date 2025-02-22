@@ -6,13 +6,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginCheckInterceptor())
             .order(1)
             .addPathPatterns("/**")
-            .excludePathPatterns("/user/sign-up", "/log/login");
+            .excludePathPatterns("/user/sign-up", "/log/login", "log/logout");
     }
 }
 

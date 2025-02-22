@@ -4,6 +4,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import park_su_park.backend.domain.User;
+import park_su_park.backend.dto.responseData.UserData;
 import park_su_park.backend.exception.LogInException;
 import park_su_park.backend.exception.NotExistException;
 import park_su_park.backend.message.USERMESSAGE;
@@ -15,12 +16,12 @@ public class LoginService {
 
     private final UserRepository userRepository;
 
-    public User login(String email, String password) {
-        User findUser = userRepository.findByEmail(email).orElseThrow(() -> new NotExistException(
+    public UserData login(String email, String password) {
+        User foundUser = userRepository.findByEmail(email).orElseThrow(() -> new NotExistException(
             USERMESSAGE.NOT_EXIST));
-        if (!findUser.getPassword().equals(password)) {
+        if (!foundUser.getPassword().equals(password)) {
             throw new LogInException("비밀번호가 일치하지 않습니다.");
         }
-        return findUser;
+        return UserData.of(foundUser);
     }
 }
