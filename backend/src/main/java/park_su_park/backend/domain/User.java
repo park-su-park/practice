@@ -39,7 +39,7 @@ public class User {
     @Column(updatable = false)
     private LocalDateTime createTime;
 
-    public static User create(RequestUserDto requestUserDto) {
+    public static User of(RequestUserDto requestUserDto) {
         User user = new User();
         user.setUsername(requestUserDto.getUsername());
         user.setPassword(requestUserDto.getPassword());
