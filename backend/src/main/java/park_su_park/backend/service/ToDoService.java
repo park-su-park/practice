@@ -63,8 +63,12 @@ public class ToDoService {
     }
 
     private void updateToDo(RequestToDoDto requestToDoDto, ToDo toDo) {
-        toDo.setTitle(requestToDoDto.getTitle());
-        toDo.setContent(requestToDoDto.getContent());
+        if (requestToDoDto.getTitle() != null) {
+            toDo.setTitle(requestToDoDto.getTitle());
+        }
+        if (requestToDoDto.getContent() != null) {
+            toDo.setContent(requestToDoDto.getContent());
+        }
     }
 
     @Transactional

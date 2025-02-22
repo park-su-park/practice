@@ -63,9 +63,15 @@ public class UserService {
     }
 
     private void updateUserByDto(RequestUserDto requestUserDto, User user) {
-        user.setUsername(requestUserDto.getUsername());
-        user.setPassword(requestUserDto.getPassword());
-        user.setEmail(requestUserDto.getEmail());
+        if (requestUserDto.getUsername() != null) {
+            user.setUsername(requestUserDto.getUsername());
+        }
+        if (requestUserDto.getEmail() != null) {
+            user.setPassword(requestUserDto.getPassword());
+        }
+        if (requestUserDto.getPassword() != null) {
+            user.setEmail(requestUserDto.getEmail());
+        }
     }
 
 

@@ -42,7 +42,7 @@ public class UserController {
     public ResponseEntity<ApiResponseBody> createUser(
         @Valid @RequestBody RequestUserDto requestUserDto) {
         UserData userData = userService.save(requestUserDto);
-        return ResponseEntity.ok(new ApiResponseBody(USERMESSAGE.CREATE_SUCCESS,userData));
+        return ResponseEntity.ok(new ApiResponseBody(USERMESSAGE.CREATE_SUCCESS, userData));
     }
 
     //R
@@ -59,27 +59,22 @@ public class UserController {
     @Validated(UpdateUser.class)
     public ResponseEntity<ApiResponseBody> updateUser(HttpServletRequest request,
         @Valid @RequestBody RequestUserDto requestUserDto) {
-        Long userId = validSession(request);
+        Long userId = getUserIdFromSession(request);
         UserData userData = userService.update(userId, requestUserDto);
         return ResponseEntity.ok(new ApiResponseBody(USERMESSAGE.UPDATE_SUCCESS, userData));
     }
 
-    private static Long validSession(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        Long userId = (Long) session.getAttribute(LogInterface.LOGIN_USER);
-        log.info("{}", userId);
-        if (userId == null) {
-            throw new ExpriedSessionException();
-        }
-        return userId;
-    }
-
-
     //D
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponseBody> deleteUser(HttpServletRequest request) {
-        Long userId = validSession(request);
+        Long userId = getUserIdFromSession(request);
         userService.delete(userId);
         return ResponseEntity.ok(new ApiResponseBody(USERMESSAGE.DELETE_SUCCESS, null));
+    }
+
+    private static Long getUserIdFromSession(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Long userId = (Long) session.getAttribute(LogInterface.LOGIN_USER);
+        return userId;
     }
 }
