@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +42,7 @@ public class UserController {
     @Validated(CreateUser.class)
     public ResponseEntity<ApiResponseBody> createUser(
         @Valid @RequestBody RequestUserDto requestUserDto) {
+        log.info("sign-up");
         UserData userData = userService.save(requestUserDto);
         return ResponseEntity.ok(new ApiResponseBody(USERMESSAGE.CREATE_SUCCESS, userData));
     }

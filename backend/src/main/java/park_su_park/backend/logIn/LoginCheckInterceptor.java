@@ -15,7 +15,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         Object handler) throws Exception {
         String requestURI = request.getRequestURI();
 
-        log.info("인증 체크 인터세버 실행 {}", requestURI);
+        log.info("인증 체크 인터셉터 실행 {}", requestURI);
         HttpSession session = request.getSession(false);
 
         if (session == null || session.getAttribute(LogInterface.LOGIN_USER) == null) {
