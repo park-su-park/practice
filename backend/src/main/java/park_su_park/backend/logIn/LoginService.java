@@ -15,11 +15,12 @@ import park_su_park.backend.repository.UserRepository;
 public class LoginService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserData login(String email, String password) {
         User foundUser = userRepository.findByEmail(email).orElseThrow(() -> new NotExistException(
-            USERMESSAGE.NOT_EXIST));
-        if (!foundUser.getPassword().equals(password)) {
+            USERMESSAGE.NOT_EXIST_BY_EMAIL));
+        if (!passwordEncoder.matches(password, foundUser.getEncodedPassword())) {
             throw new LogInException(LogInterface.NOT_MATCH);
         }
         return UserData.of(foundUser);

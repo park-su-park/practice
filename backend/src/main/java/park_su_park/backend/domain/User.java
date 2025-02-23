@@ -11,6 +11,7 @@ import park_su_park.backend.dto.requestDto.RequestUserDto;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import park_su_park.backend.logIn.PasswordEncoder;
 
 @Entity
 @Getter
@@ -23,7 +24,7 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ToDo> toDoes = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
@@ -31,7 +32,7 @@ public class User {
 
     private String username;
 
-    private String password;
+    private String encodedPassword;
 
     private String email;
 
@@ -42,7 +43,9 @@ public class User {
     public static User of(RequestUserDto requestUserDto) {
         User user = new User();
         user.setUsername(requestUserDto.getUsername());
-        user.setPassword(requestUserDto.getPassword());
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(requestUserDto.getPassword());
+        user.setEncodedPassword(encodedPassword);
         user.setEmail(requestUserDto.getEmail());
         return user;
     }

@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({LogInException.class, ExpriedSessionException.class})
     public ResponseEntity<ApiResponseBody> handle_UNAUTHORIZED(RuntimeException e) {
-        
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(new ApiResponseBody(e.getMessage(), null));
     }

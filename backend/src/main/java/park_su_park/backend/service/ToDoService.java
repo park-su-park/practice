@@ -30,7 +30,7 @@ public class ToDoService {
 
     public ToDoData save(Long userId, RequestToDoDto requestToDoDto) {
         User foundUser = userRepository.findById(userId)
-            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST));
+            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST_BY_ID));
         //Dto -> ToDo 생성
         ToDo toDo = ToDo.create(foundUser, requestToDoDto);
         toDoRepository.save(toDo);
@@ -39,14 +39,14 @@ public class ToDoService {
 
     public ToDoData findAll(Long userId) {
         User foundUser = userRepository.findById(userId)
-            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST));
+            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST_BY_ID));
         List<ToDo> toDoes = foundUser.getToDoes();
         return ToDoData.of(toDoes);
     }
 
     public ToDoData findOne(Long userId, Long toDoId) {
         User foundUser = userRepository.findById(userId)
-            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST));
+            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST_BY_ID));
         ToDo foundToDo = toDoRepository.findByUserIdAndId(userId, toDoId).
             orElseThrow(() -> new NotExistException(TODOMESSAGE.NOT_EXIST));
         return ToDoData.of(foundToDo);
@@ -55,7 +55,7 @@ public class ToDoService {
     @Transactional
     public ToDoData update(Long userId, Long toDoId, RequestToDoDto requestToDoDto) {
         User foundUser = userRepository.findById(userId)
-            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST));
+            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST_BY_ID));
         ToDo foundToDo = toDoRepository.findByUserIdAndId(userId, toDoId).
             orElseThrow(() -> new NotExistException(TODOMESSAGE.NOT_EXIST));
         updateToDo(requestToDoDto, foundToDo);
@@ -74,7 +74,7 @@ public class ToDoService {
     @Transactional
     public void delete(Long userId, Long toDoId) {
         User foundUser = userRepository.findById(userId)
-            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST));
+            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST_BY_ID));
         ToDo foundToDo = toDoRepository.findByUserIdAndId(userId, toDoId).
             orElseThrow(() -> new NotExistException(TODOMESSAGE.NOT_EXIST));
         toDoRepository.delete(foundToDo);

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ import park_su_park.backend.repository.UserRepository;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/log")
+@Slf4j
 public class LogController {
 
     private final LoginService loginService;
@@ -37,6 +39,7 @@ public class LogController {
     public ResponseEntity<ApiResponseBody> login(@Valid @RequestBody RequestLogInDto dto,
         HttpServletRequest request,
         HttpServletResponse response) {
+        log.info("login-controller");
         UserData userData = loginService.login(dto.getEmail(), dto.getPassword());
 
         HttpSession session = request.getSession();
