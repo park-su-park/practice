@@ -9,6 +9,7 @@ import park_su_park.backend.dto.responseBody.UserData;
 import park_su_park.backend.exception.DuplicateResourceException;
 import park_su_park.backend.exception.ResourceNotFoundException;
 import park_su_park.backend.repository.UserRepository;
+import park_su_park.backend.web.security.encoder.PasswordEncoder;
 
 import java.text.MessageFormat;
 
@@ -18,9 +19,10 @@ import java.text.MessageFormat;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserData join(CreateUserRequest createUserRequest) {
-        User user = User.create(createUserRequest);
+        User user = createNewUserWithEncodedPassword(createUserRequest);
         User savedUser = userRepository.save(user);
         return UserData.create(savedUser);
     }
@@ -34,19 +36,19 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserData findUserByUsername(String username) {
-        return UserData.create(userRepository.findUserByUsername(username)
+    public User findUserByUsername(String username) {
+        return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        MessageFormat.format("해당 사용자명을 가진 사용자를 찾지 못했습니다: {0}", username)
-                )));
+                        MessageFormat.format("해당 사용자명 를 가진 사용자를 찾지 못했습니다: {0}", username)
+                ));
     }
 
     @Transactional(readOnly = true)
-    public UserData findUserByEmail(String email) {
-        return UserData.create(userRepository.findUserByEmail(email)
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         MessageFormat.format("해당 email 을 가진 사용자를 찾지 못했습니다: {0}", email)
-                )));
+                ));
     }
 
     @Transactional(readOnly = true)
@@ -63,5 +65,11 @@ public class UserService {
                     MessageFormat.format("이미 사용중인 email 입니다: {0}", email)
             );
         }
+    }
+
+    private User createNewUserWithEncodedPassword(CreateUserRequest createUserRequest) {
+        User user = User.create(createUserRequest);
+        user.setPassword(passwordEncoder.encode(createUserRequest.getRawPassword()));
+        return user;
     }
 }

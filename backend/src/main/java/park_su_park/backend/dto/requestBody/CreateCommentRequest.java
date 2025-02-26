@@ -1,13 +1,13 @@
 package park_su_park.backend.dto.requestBody;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import park_su_park.backend.util.validation.Content;
 
 @Getter
 @RequiredArgsConstructor
 public class CreateCommentRequest {
 
-    @NotBlank
+    @Content
     private final String content;
 }
