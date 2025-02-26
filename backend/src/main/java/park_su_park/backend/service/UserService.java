@@ -10,7 +10,6 @@ import park_su_park.backend.exception.DuplicateResourceException;
 import park_su_park.backend.exception.ResourceNotFoundException;
 import park_su_park.backend.repository.UserRepository;
 import park_su_park.backend.web.security.encoder.PasswordEncoder;
-
 import java.text.MessageFormat;
 
 @Service
@@ -39,7 +38,7 @@ public class UserService {
     public User findUserByUsername(String username) {
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        MessageFormat.format("해당 사용자명 를 가진 사용자를 찾지 못했습니다: {0}", username)
+                        MessageFormat.format("해당 사용자명 을 가진 사용자를 찾지 못했습니다: {0}", username)
                 ));
     }
 
