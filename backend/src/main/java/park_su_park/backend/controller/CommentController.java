@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import park_su_park.backend.dto.requestBody.CreateCommentRequest;
 import park_su_park.backend.dto.responseBody.ApiResponseBody;
 import park_su_park.backend.dto.responseBody.CommentData;
+import park_su_park.backend.dto.responseBody.PagedObjectData;
 import park_su_park.backend.service.CommentService;
 import park_su_park.backend.util.constant.CommentResponseMessage;
 
@@ -33,7 +34,15 @@ public class CommentController {
         return ResponseEntity.ok(ApiResponseBody.create(CommentResponseMessage.COMMENT_FETCH_SUCCESS, commentData));
     }
 
+    @GetMapping
+    public ResponseEntity<ApiResponseBody> getAllComments(@RequestParam int pageNumber, int pageSize) {
+        PagedObjectData<CommentData> pagedObjectData = commentService.findAll(pageNumber, pageSize);
+
+        return ResponseEntity.ok(ApiResponseBody.create(CommentResponseMessage.COMMENT_FETCH_SUCCESS, pagedObjectData));
+    }
+
     @PatchMapping("/{commentId}")
+
     public ResponseEntity<ApiResponseBody> updateComment(@RequestBody @Valid CreateCommentRequest updateCommentRequest, @PathVariable Long commentId, HttpSession session) {
         CommentData commentData = commentService.updateComment(updateCommentRequest, commentId, session);
 

@@ -2,11 +2,15 @@ package park_su_park.backend.service;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import park_su_park.backend.domain.ToDo;
 import park_su_park.backend.domain.User;
 import park_su_park.backend.dto.requestBody.CreateToDoRequest;
+import park_su_park.backend.dto.responseBody.PagedObjectData;
 import park_su_park.backend.dto.responseBody.ToDoData;
 import park_su_park.backend.exception.ForbiddenAccessException;
 import park_su_park.backend.exception.ResourceNotFoundException;
@@ -45,6 +49,19 @@ public class ToDoService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         MessageFormat.format("해당 id 를 가진 일정을 찾을 수 없습니다: {0}", toDoId)
                 ));
+    }
+
+    @Transactional(readOnly = true)
+    public PagedObjectData<ToDoData> findAll(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updateTime"));
+        Page<ToDo> toDoPage = toDoRepository.findAll(pageRequest);
+
+        if (toDoPage.getContent().isEmpty()) {
+            throw new ResourceNotFoundException(ToDoResponseMessage.TODO_FETCH_FAILED);
+        }
+
+        Page<ToDoData> toDoDataPage = toDoPage.map(ToDoData::create);
+        return PagedObjectData.create(toDoDataPage);
     }
 
     public ToDoData getToDoData(Long toDoId) {

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import park_su_park.backend.dto.requestBody.CreateToDoRequest;
 import park_su_park.backend.dto.responseBody.ApiResponseBody;
+import park_su_park.backend.dto.responseBody.PagedObjectData;
 import park_su_park.backend.dto.responseBody.ToDoData;
 import park_su_park.backend.service.ToDoService;
 import park_su_park.backend.util.constant.ToDoResponseMessage;
@@ -31,6 +32,13 @@ public class ToDoController {
         ToDoData toDoData = toDoService.getToDoData(toDoId);
 
         return ResponseEntity.ok(ApiResponseBody.create(ToDoResponseMessage.TODO_FETCH_SUCCESS, toDoData));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponseBody> getAllToDos(@RequestParam int pageNumber, @RequestParam int pageSize) {
+        PagedObjectData<ToDoData> pagedObjectData = toDoService.findAll(pageNumber, pageSize);
+
+        return ResponseEntity.ok(ApiResponseBody.create(ToDoResponseMessage.TODO_FETCH_SUCCESS, pagedObjectData));
     }
 
     @PatchMapping("/{toDoId}")
