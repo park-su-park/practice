@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import park_su_park.backend.domain.User;
 import park_su_park.backend.dto.requestDto.RequestLogInDto;
 import park_su_park.backend.dto.responseDto.ResponseLogInDto;
-import park_su_park.backend.dto.responseDto.ResponseUserDto;
+import park_su_park.backend.dto.responseData.UserData;
+import park_su_park.backend.repository.UserRepository;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +27,7 @@ import park_su_park.backend.dto.responseDto.ResponseUserDto;
 public class LogController {
 
     private final LoginService loginService;
-    private final SessionManager sessionManager;
-    private final static String LOGIN_USER = "loginUser";
+    private final UserRepository userRepository;
 
     @PostMapping("/login")
     public ResponseEntity<ResponseLogInDto> login(@Valid @RequestBody RequestLogInDto dto,
@@ -35,7 +36,7 @@ public class LogController {
         User loginUser = loginService.login(dto.getEmail(), dto.getPassword());
 
         HttpSession session = request.getSession();
-        session.setAttribute(LOGIN_USER, loginUser);
+        session.setAttribute(LogInterface.LOGIN_USER, loginUser.getId());
 
         return ResponseEntity.ok(new ResponseLogInDto(loginUser.getId(), loginUser.getUsername()));
     }
@@ -51,14 +52,17 @@ public class LogController {
 
     @GetMapping
     public ResponseEntity<Object> getUserInfo(
-        @SessionAttribute(name = LOGIN_USER, required = false) User findUser,
+        @SessionAttribute(name = LogInterface.LOGIN_USER, required = false) Long userId,
         HttpServletRequest request) {
+        Optional<User> findUser = userRepository.findById(userId);
+        if (findUser.isPresent()) {
+            UserData userData = UserData.of(findUser.get());
+            return ResponseEntity.ok(userData);
+        }
         //세션에 유저가 없을 시 로그인 화면으로 redirect
-        if (findUser == null) {
+        else{
             return ResponseEntity.status(302).location(URI.create("/")).build();
         }
-        ResponseUserDto responseUserDto = ResponseUserDto.of(findUser);
-        return ResponseEntity.ok(responseUserDto);
     }
 
     private void expiredCookie(HttpServletResponse response, String cookieName) {
