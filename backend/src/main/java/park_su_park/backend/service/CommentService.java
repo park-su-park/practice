@@ -2,6 +2,9 @@ package park_su_park.backend.service;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import park_su_park.backend.domain.Comment;
@@ -9,6 +12,7 @@ import park_su_park.backend.domain.ToDo;
 import park_su_park.backend.domain.User;
 import park_su_park.backend.dto.requestBody.CreateCommentRequest;
 import park_su_park.backend.dto.responseBody.CommentData;
+import park_su_park.backend.dto.responseBody.PagedObjectData;
 import park_su_park.backend.exception.ForbiddenAccessException;
 import park_su_park.backend.exception.ResourceNotFoundException;
 import park_su_park.backend.repository.CommentRepository;
@@ -56,6 +60,19 @@ public class CommentService {
         Comment comment = findComment(commentId);
 
         return CommentData.create(comment);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedObjectData<CommentData> findAll(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updateTime"));
+        Page<Comment> commentPage = commentRepository.findAll(pageRequest);
+
+        if (commentPage.getContent().isEmpty()) {
+            throw new ResourceNotFoundException(CommentResponseMessage.COMMENT_FETCH_FAILED);
+        }
+
+        Page<CommentData> commentDataPage = commentPage.map(CommentData::create);
+        return PagedObjectData.create(commentDataPage);
     }
 
     public CommentData updateComment(CreateCommentRequest updateCommentRequest, Long commentId, HttpSession session) {
