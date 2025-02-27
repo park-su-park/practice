@@ -10,6 +10,7 @@ import park_su_park.backend.dto.requestDto.RequestUserDto;
 import park_su_park.backend.dto.responseData.UserData;
 import park_su_park.backend.exception.NotExistException;
 import park_su_park.backend.exception.UsedException;
+import park_su_park.backend.logIn.PasswordEncoder;
 import park_su_park.backend.message.USERMESSAGE;
 import park_su_park.backend.repository.UserRepository;
 
@@ -20,13 +21,22 @@ import park_su_park.backend.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserData save(RequestUserDto requestUserDto) {
         validateUser(requestUserDto);
-        User user = User.of(requestUserDto);
+        User user = getUser(requestUserDto);
         User savedUser = userRepository.save(user);
         return UserData.of(savedUser);
+    }
+
+    private User getUser(RequestUserDto requestUserDto) {
+        User user = new User();
+        user.setUsername(requestUserDto.getUsername());
+        user.setEncodedPassword(passwordEncoder.encode(requestUserDto.getPassword()));
+        user.setEmail(requestUserDto.getEmail());
+        return user;
     }
 
 
@@ -49,7 +59,7 @@ public class UserService {
 
     public UserData findOne(Long id) {
         User foundUser = userRepository.findById(id)
-            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST));
+            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST_BY_ID));
         return UserData.of(foundUser);
     }
 
@@ -57,22 +67,29 @@ public class UserService {
     @Transactional
     public UserData update(Long id, RequestUserDto requestUserDto) {
         User foundUser = userRepository.findById(id)
-            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST));
+            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST_BY_ID));
         updateUserByDto(requestUserDto, foundUser);
         return UserData.of(foundUser);
     }
 
     private void updateUserByDto(RequestUserDto requestUserDto, User user) {
-        user.setUsername(requestUserDto.getUsername());
-        user.setPassword(requestUserDto.getPassword());
-        user.setEmail(requestUserDto.getEmail());
+        if (requestUserDto.getUsername() != null) {
+            user.setUsername(requestUserDto.getUsername());
+        }
+        if (requestUserDto.getPassword() != null) {
+            String encodedPassword = passwordEncoder.encode(requestUserDto.getPassword());
+            user.setEncodedPassword(encodedPassword);
+        }
+        if (requestUserDto.getEmail() != null) {
+            user.setEmail(requestUserDto.getEmail());
+        }
     }
 
 
     @Transactional
     public void delete(Long id) {
         User foundUser = userRepository.findById(id)
-            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST));
+            .orElseThrow(() -> new NotExistException(USERMESSAGE.NOT_EXIST_BY_ID));
         userRepository.delete(foundUser);
     }
 

@@ -4,7 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +20,7 @@ import park_su_park.backend.dto.responseData.ApiResponseBody;
 import park_su_park.backend.dto.responseData.ToDoData;
 import park_su_park.backend.exception.ExpriedSessionException;
 import park_su_park.backend.logIn.LogInterface;
+import park_su_park.backend.logIn.SessionManager;
 import park_su_park.backend.message.TODOMESSAGE;
 import park_su_park.backend.repository.UserRepository;
 import park_su_park.backend.service.ToDoService;
@@ -25,10 +28,11 @@ import park_su_park.backend.service.ToDoService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/to-do")
+@Validated
 public class ToDoController {
 
     private final ToDoService toDoService;
-    private final UserRepository userRepository;
+    private final SessionManager sessionManager;
 
     //C
     @PostMapping("/create")
@@ -36,7 +40,7 @@ public class ToDoController {
         HttpServletRequest request,
         @Valid @RequestBody
         RequestToDoDto requestToDoDto) {
-        Long userId = validSession(request);
+        Long userId = sessionManager.getUserId(request);
         ToDoData toDoData = toDoService.save(userId, requestToDoDto);
         return ResponseEntity.ok(new ApiResponseBody(TODOMESSAGE.CREATE_SUCCESS, toDoData));
     }
@@ -45,7 +49,7 @@ public class ToDoController {
     @GetMapping
     public ResponseEntity<ApiResponseBody> readToDo(
         HttpServletRequest request) {
-        Long userId = validSession(request);
+        Long userId = sessionManager.getUserId(request);
 
         ToDoData toDoData = toDoService.findAll(userId);
         return ResponseEntity.ok(new ApiResponseBody(TODOMESSAGE.READ_ALL_SUCCESS, toDoData));
@@ -55,8 +59,8 @@ public class ToDoController {
     @GetMapping("/{toDoId}")
     public ResponseEntity<ApiResponseBody> readAllToDo(
         HttpServletRequest request, @PathVariable Long toDoId) {
-        Long userId = validSession(request);
-        ToDoData toDoData = toDoService.findOne(userId,toDoId);
+        Long userId = sessionManager.getUserId(request);
+        ToDoData toDoData = toDoService.findOne(userId, toDoId);
         return ResponseEntity.ok(new ApiResponseBody(TODOMESSAGE.READ_SUCCESS, toDoData));
     }
 
@@ -65,7 +69,7 @@ public class ToDoController {
     public ResponseEntity<ApiResponseBody> updateToDo(HttpServletRequest request,
         @PathVariable Long toDoId,
         @Valid @RequestBody RequestToDoDto requestToDoDto) {
-        Long userId = validSession(request);
+        Long userId = sessionManager.getUserId(request);
         ToDoData toDoData = toDoService.update(userId, toDoId, requestToDoDto);
         return ResponseEntity.ok(new ApiResponseBody(TODOMESSAGE.UPDATE_SUCCESS, toDoData));
     }
@@ -74,17 +78,10 @@ public class ToDoController {
     @DeleteMapping("/{toDoId}")
     public ResponseEntity<ApiResponseBody> deleteToDo(HttpServletRequest request,
         @PathVariable Long toDoId) {
-        Long userId = validSession(request);
+        Long userId = sessionManager.getUserId(request);
         toDoService.delete(userId, toDoId);
         return ResponseEntity.ok(new ApiResponseBody(TODOMESSAGE.DELETE_SUCCESS, null));
     }
 
-    private Long validSession(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        Long userId = (Long) session.getAttribute(LogInterface.LOGIN_USER);
-        if (userId == null) {
-            throw new ExpriedSessionException();
-        }
-        return userId;
-    }
+
 }
