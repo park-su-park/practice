@@ -53,7 +53,9 @@ public class ToDoService {
 
     @Transactional(readOnly = true)
     public PagedObjectData<ToDoData> findAll(int pageNumber, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updateTime"));
+        int adjustedPageNumber = Math.max(pageNumber - 1, 0);
+
+        PageRequest pageRequest = PageRequest.of(adjustedPageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updateTime"));
         Page<ToDo> toDoPage = toDoRepository.findAll(pageRequest);
 
         if (toDoPage.getContent().isEmpty()) {
