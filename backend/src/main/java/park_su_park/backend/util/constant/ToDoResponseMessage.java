@@ -7,4 +7,5 @@ public interface ToDoResponseMessage {
     String TODO_DELETION_SUCCESS = "일정 삭제 성공";
 
     String TODO_FORBIDDEN_ACCESS = "해당 일정을 수정 및 삭제할 권한이 없습니다";
+    String TODO_FETCH_FAILED = "일정을 찾을 수 없습니다";
 }

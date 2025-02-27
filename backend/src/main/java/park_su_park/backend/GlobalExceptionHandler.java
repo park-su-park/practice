@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import park_su_park.backend.dto.responseBody.ApiResponseBody;
 import park_su_park.backend.dto.responseBody.ValidationFailureData;
 import park_su_park.backend.exception.*;
@@ -18,7 +19,7 @@ import java.util.Map;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({DuplicateResourceException.class, IllegalArgumentException.class, IllegalStateException.class})
+    @ExceptionHandler({DuplicateResourceException.class, IllegalArgumentException.class, IllegalStateException.class, MethodArgumentTypeMismatchException.class})
     public ResponseEntity<ApiResponseBody> handleBadRequest(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseBody.create(e.getMessage()));
     }
