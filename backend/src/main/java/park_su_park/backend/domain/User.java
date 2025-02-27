@@ -39,14 +39,4 @@ public class User {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createTime;
-
-    public static User of(RequestUserDto requestUserDto) {
-        User user = new User();
-        user.setUsername(requestUserDto.getUsername());
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(requestUserDto.getPassword());
-        user.setEncodedPassword(encodedPassword);
-        user.setEmail(requestUserDto.getEmail());
-        return user;
-    }
 }

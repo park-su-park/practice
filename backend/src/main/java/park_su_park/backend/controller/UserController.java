@@ -23,6 +23,7 @@ import park_su_park.backend.dto.responseData.ApiResponseBody;
 import park_su_park.backend.dto.responseData.UserData;
 import park_su_park.backend.exception.ExpriedSessionException;
 import park_su_park.backend.logIn.LogInterface;
+import park_su_park.backend.logIn.SessionManager;
 import park_su_park.backend.message.USERMESSAGE;
 import park_su_park.backend.repository.UserRepository;
 import park_su_park.backend.service.UserService;
@@ -35,7 +36,7 @@ import park_su_park.backend.service.UserService;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
+    private final SessionManager sessionManager;
 
     //C
     @PostMapping("/sign-up")
@@ -61,7 +62,7 @@ public class UserController {
     @Validated(UpdateUser.class)
     public ResponseEntity<ApiResponseBody> updateUser(HttpServletRequest request,
         @Valid @RequestBody RequestUserDto requestUserDto) {
-        Long userId = getUserIdFromSession(request);
+        Long userId = sessionManager.getUserId(request);
         UserData userData = userService.update(userId, requestUserDto);
         return ResponseEntity.ok(new ApiResponseBody(USERMESSAGE.UPDATE_SUCCESS, userData));
     }
@@ -69,14 +70,9 @@ public class UserController {
     //D
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponseBody> deleteUser(HttpServletRequest request) {
-        Long userId = getUserIdFromSession(request);
+        Long userId = sessionManager.getUserId(request);
         userService.delete(userId);
         return ResponseEntity.ok(new ApiResponseBody(USERMESSAGE.DELETE_SUCCESS, null));
     }
 
-    private static Long getUserIdFromSession(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        Long userId = (Long) session.getAttribute(LogInterface.LOGIN_USER);
-        return userId;
-    }
 }

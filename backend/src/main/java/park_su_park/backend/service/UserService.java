@@ -26,7 +26,8 @@ public class UserService {
     @Transactional
     public UserData save(RequestUserDto requestUserDto) {
         validateUser(requestUserDto);
-        User savedUser = getUser(requestUserDto);
+        User user = getUser(requestUserDto);
+        User savedUser = userRepository.save(user);
         return UserData.of(savedUser);
     }
 
@@ -35,8 +36,7 @@ public class UserService {
         user.setUsername(requestUserDto.getUsername());
         user.setEncodedPassword(passwordEncoder.encode(requestUserDto.getPassword()));
         user.setEmail(requestUserDto.getEmail());
-        User savedUser = userRepository.save(user);
-        return savedUser;
+        return user;
     }
 
 
