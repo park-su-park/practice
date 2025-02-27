@@ -64,7 +64,9 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public PagedObjectData<CommentData> findAll(int pageNumber, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updateTime"));
+        int adjustedPageNumber = Math.max(pageNumber - 1, 0);
+
+        PageRequest pageRequest = PageRequest.of(adjustedPageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updateTime"));
         Page<Comment> commentPage = commentRepository.findAll(pageRequest);
 
         if (commentPage.getContent().isEmpty()) {
