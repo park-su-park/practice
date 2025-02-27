@@ -35,7 +35,7 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponseBody> getAllComments(@RequestParam int pageNumber, int pageSize) {
+    public ResponseEntity<ApiResponseBody> getAllComments(@RequestParam(defaultValue = "1") int pageNumber, @RequestParam(defaultValue = "10") int pageSize) {
         PagedObjectData<CommentData> pagedObjectData = commentService.findAll(pageNumber, pageSize);
 
         return ResponseEntity.ok(ApiResponseBody.create(CommentResponseMessage.COMMENT_FETCH_SUCCESS, pagedObjectData));

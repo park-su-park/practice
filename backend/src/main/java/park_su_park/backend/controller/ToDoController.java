@@ -35,7 +35,7 @@ public class ToDoController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponseBody> getAllToDos(@RequestParam int pageNumber, @RequestParam int pageSize) {
+    public ResponseEntity<ApiResponseBody> getAllToDos(@RequestParam(defaultValue = "1") int pageNumber, @RequestParam(defaultValue = "10") int pageSize) {
         PagedObjectData<ToDoData> pagedObjectData = toDoService.findAll(pageNumber, pageSize);
 
         return ResponseEntity.ok(ApiResponseBody.create(ToDoResponseMessage.TODO_FETCH_SUCCESS, pagedObjectData));
